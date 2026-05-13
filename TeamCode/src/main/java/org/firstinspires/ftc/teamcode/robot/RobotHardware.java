@@ -54,8 +54,6 @@ public class RobotHardware {
     public AnalogInput spindexerPosition;
 
     public RevColorSensorV3 sensorChamberFront1, sensorChamberFront2, sensorChamberRight1, sensorChamberRight2, sensorChamberLeft1, sensorChamberLeft2;
-    public Rev2mDistanceSensor sensorIntake;
-
     public IMU imu;
     public GoBildaPinpointDriver odometry;
     private Pose2D pos;
@@ -109,8 +107,6 @@ public class RobotHardware {
 
         //INTAKE
         motorIntake = hardwareMap.get(DcMotor.class, "motorIntake");
-
-        sensorIntake = hardwareMap.get(Rev2mDistanceSensor.class, "sensorIntake");
 
         pressurePlate = hardwareMap.get(DigitalChannel.class, "pressurePlate");
 

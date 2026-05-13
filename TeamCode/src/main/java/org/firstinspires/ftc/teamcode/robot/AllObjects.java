@@ -5,9 +5,9 @@ import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.detection.Turret;
 
 public class AllObjects {
-    private ActiveIntake intake;
-    private Chassis chassis;
-    private Turret turret;
+    public ActiveIntake intake;
+    public Chassis chassis;
+    public Turret turret;
 
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
