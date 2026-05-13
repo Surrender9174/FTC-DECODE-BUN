@@ -47,11 +47,10 @@ public class Turret {
         currentposition = dcMotor.getCurrentPosition();
         currentspeed = dcMotor.getVelocity();
         error = targetposition - currentposition;
+        power = kp * error + (-currentspeed) + kd;
         if(error >= 4) useKs = true;
         if(error < 4) useKs = false;
-        if(useKs) power = power + (-currentspeed) * ks;
-
-        power = kp * error + (-currentspeed) + kd;
+        if(useKs) power = power + (-currentspeed) + ks;
         power = clamp(power/battery, -1, 1);
         dcMotor.setPower(power);
 
