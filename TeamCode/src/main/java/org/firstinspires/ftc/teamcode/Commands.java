@@ -12,6 +12,7 @@ public class Commands {
     private ActiveIntake intake;
     public void init(AllObjects objects){
         chassis = objects.chassis;
+        intake = objects.intake;
     }
     public void update()
     {

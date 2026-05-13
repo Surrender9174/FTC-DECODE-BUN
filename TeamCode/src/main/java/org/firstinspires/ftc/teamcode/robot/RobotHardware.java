@@ -122,7 +122,7 @@ public class RobotHardware {
         sensorChamberLeft1 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberLeft1");
         sensorChamberLeft2 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberLeft2");
 
-        spindexerPosition = hardwareMap.get(AnalogInput.class, "analogSpindexer");
+        spindexerPosition = hardwareMap.get(AnalogInput.class, "spindexerAnalog");
 
         //OUTTAKE
         motorTurret = hardwareMap.get(DcMotorEx.class, "motorTurret");
