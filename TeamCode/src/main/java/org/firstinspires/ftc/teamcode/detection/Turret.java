@@ -4,6 +4,7 @@ import static com.pedropathing.math.MathFunctions.clamp;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -11,10 +12,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
+@Configurable
 public class Turret {
     private DcMotorEx dcMotor;
     private ElapsedTime timer = new ElapsedTime();
-    private double kp = 0, kd = 0, ki = 0, ks = 0;
+    private double kp = 0.03, kd = 0.0021, ki = 0, ks = 0.01;
     private boolean usePIDF, useKs;
 
     private double currentposition, lastposition, error;
