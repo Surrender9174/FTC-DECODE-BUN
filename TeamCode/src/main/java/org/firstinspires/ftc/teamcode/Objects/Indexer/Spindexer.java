@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.objects.indexer;
+package org.firstinspires.ftc.teamcode.Objects.Indexer;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.chamber_1;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.chamber_2;
@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
