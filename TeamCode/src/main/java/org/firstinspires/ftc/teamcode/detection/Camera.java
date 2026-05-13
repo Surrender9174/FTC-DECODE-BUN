@@ -26,9 +26,9 @@ public class Camera {
             double ty = result.getTy();
             double ta = result.getTa();
 
-            telemetry.addData("Target X", tx);
-            telemetry.addData("Target Y", ty);
-            telemetry.addData("Target Area", ta);
+            telemetry.addData("Target X camera", tx);
+            telemetry.addData("Target Y camera", ty);
+            telemetry.addData("Target Area camera", ta);
         }
     }
 }
