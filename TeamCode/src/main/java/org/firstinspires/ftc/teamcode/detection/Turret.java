@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 public class Turret {
     private DcMotorEx dcMotor;
     private ElapsedTime timer = new ElapsedTime();
-    private double kp = 0.01, kd = 0.00021, ki = 0, ks = 0.01;
+    public static double kp = 0.01, kd = 0.00021, ki = 0, ks = 0.01;
     private boolean usePIDF, useKs;
 
     private double currentposition, lastposition, error;

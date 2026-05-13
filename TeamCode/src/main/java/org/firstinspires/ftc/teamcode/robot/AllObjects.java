@@ -24,7 +24,7 @@ public class AllObjects {
     public void update() {
         chassis.updateFieldCentric();
         intake.update();
-        turret.update();
+        //turret.update();
         camera.update();
         spindexer.update();
     }
