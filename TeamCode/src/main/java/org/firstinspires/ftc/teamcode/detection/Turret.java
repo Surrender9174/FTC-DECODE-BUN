@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 public class Turret {
     private DcMotorEx dcMotor;
     private ElapsedTime timer = new ElapsedTime();
-    private double kp = 0.03, kd = 0.0021, ki = 0, ks = 0.01;
+    private double kp = 0.03, kd = 0.0021, ki = 0, ks = 0.031;
     private boolean usePIDF, useKs;
 
     private double currentposition, lastposition, error;
@@ -38,12 +38,14 @@ public class Turret {
     }
     public void update(){
         if(!usePIDF){
-            currentposition = dcMotor.getTargetPosition();
+            currentposition = dcMotor.getCurrentPosition();
             currentspeed = dcMotor.getVelocity();
 
             dcMotor.setPower(power);
             return;
         }
+        currentposition = dcMotor.getCurrentPosition();
+        currentspeed = dcMotor.getVelocity();
         error = targetposition - currentposition;
         if(error >= 4) useKs = true;
         if(error < 4) useKs = false;
