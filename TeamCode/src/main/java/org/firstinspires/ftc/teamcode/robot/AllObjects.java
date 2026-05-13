@@ -15,6 +15,7 @@ public class AllObjects {
         chassis = new Chassis(robot);
         intake = new ActiveIntake(robot);
         camera = new Camera(robot);
+        turret = new Turret(robot);
     }
 
     public void update() {
