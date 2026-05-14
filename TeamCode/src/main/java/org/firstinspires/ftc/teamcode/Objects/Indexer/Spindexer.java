@@ -14,11 +14,13 @@ public class Spindexer {
     private CRServo servospin1, servospin2;
     private AnalogInput position;
     private ElapsedTime timer = new ElapsedTime();
-    private double kp, ki, kd, ks;
-    private double error, currentSpeed;
-    private double targetPositon, currentPosition, lastTargetPosition;
+    private static double kp, ki, kd, ks;
+    private double error, currentSpeed, power;
+    private double currentPosition, lastTargetPosition;
 
+    private static double targetPosition = 0;
     public static final double POS_INTAKE = 0, POS_CHAMBERFRONT = 10, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public boolean UseKs;
     public enum StateSpindexer{
         CHAMBERFRONT,
         INTAKE,
@@ -35,11 +37,12 @@ public class Spindexer {
         position = robot.spindexerPosition;
 
         state = StateSpindexer.INTAKE;
-        targetPositon = POS_INTAKE;
+        //targetPositon = POS_INTAKE;
+        UseKs = false;
 
     }
     public void update(){
-        if(state != laststate){
+       /* if(state != laststate){
             switch (state){
                 case INTAKE:
                     targetPositon = POS_INTAKE;
@@ -60,29 +63,40 @@ public class Spindexer {
             }
 
         }
-        laststate = state;
+        laststate = state;*/
 
-        currentPosition = position.getVoltage() / 3.22 * 360 * 2;
+        currentPosition = (position.getVoltage() / 3.214 * 360) % 180 * 2;
 
         if (currentPosition >= 360) currentPosition = currentPosition - 360;
 
         currentPosition = 360 - currentPosition;
 
-        error = targetPositon - currentPosition;
+        error = targetPosition - currentPosition;
 
         if (error > 180) error = error - 360;
         if (error < -180) error = error + 360;
 
-        currentSpeed = targetPositon - currentSpeed;
+        currentSpeed = targetPosition - currentSpeed;
 
         if (currentSpeed > 180) currentSpeed = currentSpeed - 360;
         if (currentSpeed < -180) currentSpeed = currentSpeed + 360;
 
-        servospin1.setPower(0);
-        servospin2.setPower(0);
+        currentSpeed = currentSpeed / timer.seconds();
 
-        //telemetry.addData("Analog", position.getVoltage());
+        power = kp * error + (-currentSpeed) * kd;
 
-        //telemetry.update();
+        if(error >= 4) UseKs = true;
+        else if (error <= 3) UseKs = false;
+
+        if(UseKs) power = power + ks;
+
+        setSpeed(power);
+
+        telemetry.addData("Analog", currentPosition);
+        telemetry.update();
+    }
+    public void setSpeed(double power){
+        servospin1.setPower(power);
+        servospin2.setPower(power);
     }
 }

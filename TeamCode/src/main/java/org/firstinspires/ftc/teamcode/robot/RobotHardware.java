@@ -181,9 +181,6 @@ public class RobotHardware {
         //dashboardTelemetry.update();
 
 
-        telemetry.addData("Analog", spindexerPosition.getVoltage());
-        telemetry.update();
-
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
