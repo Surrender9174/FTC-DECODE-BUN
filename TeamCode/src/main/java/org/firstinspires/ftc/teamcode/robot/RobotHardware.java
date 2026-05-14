@@ -177,7 +177,6 @@ public class RobotHardware {
         telemetry.addData("Y", robotY);
         telemetry.addData("H", robotH);
 
-        telemetry.update();
         //dashboardTelemetry.update();
 
         for (LynxModule hub : allHubs) {
