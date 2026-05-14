@@ -11,11 +11,14 @@ public class Trapa {
         INTAKE,
         OUTTAKE;
     }
+    private static final double POS_INTAKE = 0, POS_OUTTAKE = 0;
 
-    public void init(RobotHardware robot){
+    public Trapa(RobotHardware robot){
         servoTrapa = robot.servoTrapa;
     }
     public void update(){
+
         telemetry.addData("pos", servoTrapa.getPosition());
+        telemetry.update();
     }
 }

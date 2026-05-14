@@ -20,10 +20,12 @@ public class Turret {
     public static double kp = 0.0342, kd = 0.00285, ki = 0, ks = 1.369;
     private boolean usePIDF, useKs;
 
-    private double currentposition, lastposition, error;
-    private double currentspeed;
+    private double K = 4.166666666667;
+
+    private double currentPosition, error;
+    private double currentSpeed;
     private double power;
-    private static double targetposition = 0;
+    private static double targetPosition = 0;
 
 
     public Turret(RobotHardware robot){
@@ -34,23 +36,26 @@ public class Turret {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        currentposition = 0;
+        currentPosition = 0;
         usePIDF = true;
     }
     public void update(){
         if(!usePIDF){
-            currentposition = motor.getCurrentPosition();
-            currentspeed = motor.getVelocity();
+            currentPosition = motor.getCurrentPosition();
+            currentSpeed = motor.getVelocity();
 
             motor.setPower(power);
             return;
         }
-        currentposition = motor.getCurrentPosition();
-        currentspeed = motor.getVelocity();
+        currentPosition = motor.getCurrentPosition();
+        currentSpeed = motor.getVelocity();
 
-        error = targetposition - currentposition;
+        error = targetPosition - currentPosition;
 
-        power = kp * error + (-currentspeed) * kd;
+        if (error > 180 * K) error = error - 360 * K;
+        if (error < -180 * K) error = error + 360 * K;
+
+        power = kp * error + (-currentSpeed) * kd;
 
         if(Math.abs(error) >= 4) useKs = true;
         if(Math.abs(error) <= 2) useKs = false;
@@ -59,25 +64,20 @@ public class Turret {
 
 
         power = clamp(power/battery, -1, 1);
-        if(targetposition > 170)
-            targetposition = -165;
-        if(targetposition < -175)
-            targetposition = 160;
 
         motor.setPower(power);
 
-        if(lastposition != currentposition)
-            timer.reset();
-        lastposition = currentposition;
-
         telemetry.addData("pozitie", motor.getCurrentPosition());
-        telemetry.addData("power", power/battery);
+        //telemetry.addData("power", power/battery);
 
-        telemetry.update();
+        //telemetry.update();
     }
 
-    public void setTargetposition(){
-        Turret.targetposition = (int) (targetposition);
-        usePIDF = false;
+    public void setTargetPosition(double targetPosition) {
+        this.targetPosition = targetPosition * K;
+    }
+
+    public double getTurretAngle() {
+        return (currentPosition / K);
     }
 }
