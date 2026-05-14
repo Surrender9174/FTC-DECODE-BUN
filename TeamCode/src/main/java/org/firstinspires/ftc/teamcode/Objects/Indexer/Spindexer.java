@@ -15,7 +15,7 @@ public class Spindexer {
     private AnalogInput sensor;
     private DcMotorEx encoder;
     public static double kP=0, kI=0, kD=0, kF=0;
-    public static double chamber1=0, chamber2=0, chamber3=0, intake=0;
+    public static double chamber1=0, chamber2=0, chamber3=0, intake=10;
     private double currentPosition, targetPos, power;
     private double speed, error;
     private double currentReading, encoderOffset;
