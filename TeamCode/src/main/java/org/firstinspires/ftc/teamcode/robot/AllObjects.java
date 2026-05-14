@@ -10,14 +10,12 @@ public class AllObjects {
     public Chassis chassis;
     public Turret turret;
     private Camera camera;
-    private Spindexer spindexer;
 
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
         intake = new ActiveIntake(robot);
         camera = new Camera(robot);
         turret = new Turret(robot);
-        spindexer = new Spindexer(robot);
     }
 
     public void update() {
@@ -25,6 +23,6 @@ public class AllObjects {
         intake.update();
         turret.update();
         camera.update();
-        spindexer.update();
+        //spindexer.update();
     }
 }
