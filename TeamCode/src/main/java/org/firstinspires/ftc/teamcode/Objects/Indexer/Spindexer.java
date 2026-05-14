@@ -78,8 +78,8 @@ public class Spindexer {
         if (currentSpeed > 180) currentSpeed = currentSpeed - 360;
         if (currentSpeed < -180) currentSpeed = currentSpeed + 360;
 
-        servospin1.setPower(0.1);
-        servospin2.setPower(0.1);
+        servospin1.setPower(0);
+        servospin2.setPower(0);
 
         //telemetry.addData("Analog", position.getVoltage());
 
