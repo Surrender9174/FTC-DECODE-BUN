@@ -7,7 +7,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 public class Trapa {
     private Servo servoTrapa;
 
-    public enum StateTrapa{
+    public enum StateTrapa {
         INTAKE,
         OUTTAKE;
     }
