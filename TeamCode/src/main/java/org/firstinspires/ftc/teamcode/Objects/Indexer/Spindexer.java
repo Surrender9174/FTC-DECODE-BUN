@@ -47,7 +47,5 @@ public class Spindexer {
 
         }
         laststate = state;
-
-        current
     }
 }
