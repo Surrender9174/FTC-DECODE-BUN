@@ -59,10 +59,10 @@ public class Turret {
 
 
         power = clamp(power/battery, -1, 1);
-        if(targetposition > 170)
-            targetposition = -165;
-        if(targetposition < -175)
-            targetposition = 160;
+        if(targetposition > 660)
+            targetposition = targetposition - 300*4;
+        if(targetposition < -600)
+            targetposition = targetposition + 300*4;
 
         motor.setPower(power);
 
@@ -70,10 +70,10 @@ public class Turret {
             timer.reset();
         lastposition = currentposition;
 
-        telemetry.addData("pozitie", motor.getCurrentPosition());
-        telemetry.addData("power", power/battery);
+        //telemetry.addData("pozitie", motor.getCurrentPosition());
+        //telemetry.addData("power", power/battery);
 
-        telemetry.update();
+        //telemetry.update();
     }
 
     public void setTargetposition(){

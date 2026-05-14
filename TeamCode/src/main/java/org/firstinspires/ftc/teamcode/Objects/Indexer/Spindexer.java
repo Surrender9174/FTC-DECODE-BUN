@@ -1,15 +1,24 @@
 package org.firstinspires.ftc.teamcode.Objects.Indexer;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
+
+import android.sax.StartElementListener;
+
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
 public class Spindexer {
     private CRServo servospin1, servospin2;
     private AnalogInput position;
+    private ElapsedTime timer = new ElapsedTime();
     private double kp, ki, kd, ks;
-    private double targetPositon, currentPosition;
+    private double error, currentSpeed;
+    private double targetPositon, currentPosition, lastTargetPosition;
+
+    public static final double POS_INTAKE = 0, POS_CHAMBERFRONT = 10, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
     public enum StateSpindexer{
         CHAMBERFRONT,
         INTAKE,
@@ -19,28 +28,33 @@ public class Spindexer {
 
     private StateSpindexer state, laststate;
 
-    public void init(RobotHardware robot){
+    public Spindexer(RobotHardware robot){
         servospin1 = robot.servoSpindexer1;
         servospin2 = robot.servoSpindexer2;
+
+        position = robot.spindexerPosition;
+
+        state = StateSpindexer.INTAKE;
+        targetPositon = POS_INTAKE;
 
     }
     public void update(){
         if(state != laststate){
             switch (state){
                 case INTAKE:
-                    targetPositon = 0;
+                    targetPositon = POS_INTAKE;
 
                     break;
                 case CHAMBERFRONT:
-                    targetPositon = 10;
+                    targetPositon = POS_CHAMBERFRONT;
 
                     break;
                 case CHAMBERLEFT:
-                    targetPositon = 50;
+                    targetPositon = POS_CHAMBERLEFT;
 
                     break;
                 case CHAMBERRIGHT:
-                    targetPositon = -20;
+                    targetPositon = POS_CHAMBERRIGHT;
 
                     break;
             }
@@ -48,6 +62,27 @@ public class Spindexer {
         }
         laststate = state;
 
-        current
+        currentPosition = position.getVoltage() / 3.22 * 360 * 2;
+
+        if (currentPosition >= 360) currentPosition = currentPosition - 360;
+
+        currentPosition = 360 - currentPosition;
+
+        error = targetPositon - currentPosition;
+
+        if (error > 180) error = error - 360;
+        if (error < -180) error = error + 360;
+
+        currentSpeed = targetPositon - currentSpeed;
+
+        if (currentSpeed > 180) currentSpeed = currentSpeed - 360;
+        if (currentSpeed < -180) currentSpeed = currentSpeed + 360;
+
+        servospin1.setPower(0.1);
+        servospin2.setPower(0.1);
+
+        //telemetry.addData("Analog", position.getVoltage());
+
+        //telemetry.update();
     }
 }
