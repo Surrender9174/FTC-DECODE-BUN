@@ -16,7 +16,7 @@ public class Shoot {
 
     private double Kp = 0, Ks = 0;
     private double error, power, currentSpeed, targetSpeed;
-    private static double maxVelocity = 1800;
+    private static double maxVelocity = 2100;
     private boolean useKs;
 
     public Shoot(RobotHardware robot){
@@ -36,11 +36,8 @@ public class Shoot {
     public void update(){
         currentSpeed = motor_w_encoder.getVelocity();
         error = targetSpeed - currentSpeed;
-
         power = Kp * error + Ks * targetSpeed;
-
         power = clamp(power / battery, -1, 1);
-
         if (currentSpeed - targetSpeed >= 80 && power >= 0) power = -0.01;
 
         setPowers(power);
