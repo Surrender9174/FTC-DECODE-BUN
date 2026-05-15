@@ -1,26 +1,34 @@
 package org.firstinspires.ftc.teamcode.Objects.Indexer;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import android.sax.StartElementListener;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
-
+@Configurable
 public class Spindexer {
     private CRServo servospin1, servospin2;
+    private DcMotor encoder;
     private AnalogInput position;
     private ElapsedTime timer = new ElapsedTime();
-    private static double kp, ki, kd, ks;
+    private static double kp = 0, kd = 0, ks = 0;
     private double error, currentSpeed, power;
-    private double currentPosition, lastTargetPosition;
+    private double currentPosition, lastPosition;
 
-    private static double targetPosition = 0;
-    public static final double POS_INTAKE = 0, POS_CHAMBERFRONT = 10, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
-    public boolean UseKs;
+    private double initPosAnalog = 150;
+    private double initPosEncoder, offset;
+
+    private double targetPosition = 0;
+    public static final double POS_INTAKE = 2, POS_CHAMBERFRONT = 10, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public boolean UseKs, FirstFrame = true;
+    public static double K = 22.7555555555556;
     public enum StateSpindexer{
         CHAMBERFRONT,
         INTAKE,
@@ -35,13 +43,30 @@ public class Spindexer {
         servospin2 = robot.servoSpindexer2;
 
         position = robot.spindexerPosition;
+        encoder = robot.motorShooter6;
+
+        encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         state = StateSpindexer.INTAKE;
         //targetPositon = POS_INTAKE;
         UseKs = false;
 
+        FirstFrame = true;
+        setSpeed(0);
+
+        //initPosEncoder = (position.getVoltage() / 3.214 * 360) % 180 * 2;
+        //offset = (initPosEncoder - initPosAnalog) * K;
+
+
     }
     public void update(){
+        if(FirstFrame){
+            initPosEncoder = (position.getVoltage() / 3.214 * 360) % 180 * 2;
+            offset = (initPosEncoder - initPosAnalog) * K;
+
+            FirstFrame = false;
+        }
        /* if(state != laststate){
             switch (state){
                 case INTAKE:
@@ -65,23 +90,14 @@ public class Spindexer {
         }
         laststate = state;*/
 
-        currentPosition = (position.getVoltage() / 3.214 * 360) % 180 * 2;
-
-        if (currentPosition >= 360) currentPosition = currentPosition - 360;
-
-        currentPosition = 360 - currentPosition;
+        currentPosition = (encoder.getCurrentPosition() + offset) % 8192;
 
         error = targetPosition - currentPosition;
 
-        if (error > 180) error = error - 360;
-        if (error < -180) error = error + 360;
+        if (error > 180 * K) error = error - 360 * K;
+        if (error < -180 * K) error = error + 360 * K;
 
-        currentSpeed = targetPosition - currentSpeed;
-
-        if (currentSpeed > 180) currentSpeed = currentSpeed - 360;
-        if (currentSpeed < -180) currentSpeed = currentSpeed + 360;
-
-        currentSpeed = currentSpeed / timer.seconds();
+        currentSpeed = (currentPosition - lastPosition) / timer.seconds();
 
         power = kp * error + (-currentSpeed) * kd;
 
@@ -90,13 +106,20 @@ public class Spindexer {
 
         if(UseKs) power = power + ks;
 
-        setSpeed(power);
+        setSpeed(power / battery);
 
-        telemetry.addData("Analog", currentPosition);
-        telemetry.update();
+
+        lastPosition = currentPosition;
+        timer.reset();
+
+        telemetry.addData("CurrentPosition", (currentPosition / K));
     }
     public void setSpeed(double power){
         servospin1.setPower(power);
         servospin2.setPower(power);
+    }
+
+    public void setTargetPosition(double target){
+        this.targetPosition = target * K;
     }
 }
