@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.detection;
+package org.firstinspires.ftc.teamcode.Shooter;
 
 import static com.pedropathing.math.MathFunctions.clamp;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.detection;
+package org.firstinspires.ftc.teamcode.Shooter;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;

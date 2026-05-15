@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.robot;
 import org.firstinspires.ftc.teamcode.Objects.Drivetrain.Chassis;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
-import org.firstinspires.ftc.teamcode.detection.Camera;
-import org.firstinspires.ftc.teamcode.detection.Turret;
-
-import javax.xml.parsers.SAXParser;
+import org.firstinspires.ftc.teamcode.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.Shooter.Turret;
 
 public class AllObjects {
     public ActiveIntake intake;

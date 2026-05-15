@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.basic_functions;
 
-import org.firstinspires.ftc.teamcode.detection.Camera;
-import org.firstinspires.ftc.teamcode.detection.Detection;
-import org.firstinspires.ftc.teamcode.detection.Turret;
+import org.firstinspires.ftc.teamcode.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.Shooter.Detection;
+import org.firstinspires.ftc.teamcode.Shooter.Turret;
 
 public class Outtake {
     private Camera camera;
