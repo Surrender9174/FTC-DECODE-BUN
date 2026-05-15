@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.detection;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotY;
@@ -8,7 +10,7 @@ public class Detection {
     private Camera camera;
     private Turret turret;
 
-    private double goalX, goalY, goalZ, goalXrobot, goalYrobot, goalZrobot, goalXfield, goalYfield, goalZfield;
+    private double goalZ, goalXrobot, goalYrobot, goalZrobot, goalXfield, goalYfield, goalZfield;
     private static double xoffset, yoffset;
 
     public static double turretRadius, additionalDistance;

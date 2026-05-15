@@ -15,6 +15,7 @@ public abstract class StaticVariables {
     public static double battery;
 
     public static int chamber_1, chamber_2, chamber_3, nr_artefacts, alliance;
+    public static double goalX, goalY;
     public static double goalX, goalY, goalHeight;
 
     public static double robotVelocity, robotVelocityAngle;
