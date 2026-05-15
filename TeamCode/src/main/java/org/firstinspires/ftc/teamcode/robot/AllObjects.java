@@ -3,11 +3,17 @@ package org.firstinspires.ftc.teamcode.robot;
 import org.firstinspires.ftc.teamcode.Objects.Drivetrain.Chassis;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
-import org.firstinspires.ftc.teamcode.Shooter.Camera;
-import org.firstinspires.ftc.teamcode.Shooter.Turret;
+import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
+import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
+import org.firstinspires.ftc.teamcode.detection.Camera;
+import org.firstinspires.ftc.teamcode.detection.Turret;
+
+import javax.xml.parsers.SAXParser;
 
 public class AllObjects {
-    public ActiveIntake intake;
+    public ActiveIntake activeIntake;
+    public Intake intake;
+    public Trapa trapa;
     public Chassis chassis;
     public Turret turret;
     private Camera camera;
@@ -15,17 +21,22 @@ public class AllObjects {
 
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
-        intake = new ActiveIntake(robot);
+        activeIntake = new ActiveIntake(robot);
+        trapa = new Trapa(robot);
         camera = new Camera(robot);
         turret = new Turret(robot);
         spindexer = new Spindexer(robot);
+        intake = new Intake(activeIntake, trapa, spindexer);
     }
 
     public void update() {
         chassis.updateFieldCentric();
-        intake.update();
+        activeIntake.update();
+        trapa.update();
         turret.update();
         camera.update();
         spindexer.update();
+
+        intake.update();
     }
 }

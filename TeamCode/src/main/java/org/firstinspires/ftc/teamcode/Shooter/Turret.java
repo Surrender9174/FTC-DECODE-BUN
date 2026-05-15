@@ -37,6 +37,7 @@ public class Turret {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         currentPosition = 0;
+        targetPosition = 0;
         usePIDF = true;
     }
     public void update(){
