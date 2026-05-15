@@ -50,4 +50,8 @@ public class Shoot {
         motor_wtht_encoder.setPower(power);
         motor_w_encoder.setPower(power);
     }
+
+    private void setTargetSpeed(double targetSpeed){
+        this.targetSpeed = targetSpeed;
+    }
 }
