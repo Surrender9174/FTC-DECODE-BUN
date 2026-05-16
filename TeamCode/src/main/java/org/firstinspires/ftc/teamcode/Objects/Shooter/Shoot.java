@@ -29,7 +29,7 @@ public class Shoot {
         motor_w_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor_wtht_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor_wtht_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor_wtht_encoder.setDirection(DcMotorSimple.Direction.FORWARD);
         motor_wtht_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
