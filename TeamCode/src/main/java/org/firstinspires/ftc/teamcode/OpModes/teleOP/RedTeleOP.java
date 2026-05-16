@@ -41,7 +41,6 @@ public class RedTeleOP extends OpMode {
         robot.update();
         objects.update();
 
-        objects.camera.detectGoal();
         telemetry.addData("X",objects.camera.getGoalX());
         telemetry.addData("Y",objects.camera.getGoalY());
 

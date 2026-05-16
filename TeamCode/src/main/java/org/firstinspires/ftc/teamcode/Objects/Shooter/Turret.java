@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Objects.Shooter;
 import static com.pedropathing.math.MathFunctions.clamp;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.lastgamepad;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -18,11 +19,14 @@ public class Turret {
     private DcMotorEx motor;
     private ElapsedTime timer = new ElapsedTime();
     public static double kp = 0.0342, kd = 0.00285, ki = 0, ks = 1.369;
+
+    public ElapsedTime stabletimer = new ElapsedTime();
+
     private boolean usePIDF, useKs;
 
     private double K = 4.166666666667;
 
-    private double currentPosition, error;
+    private double currentPosition, lastPosition, error;
     private double currentSpeed;
     private double power;
     private static double targetPosition = 0;
@@ -67,6 +71,8 @@ public class Turret {
         power = clamp(power/battery, -1, 1);
         motor.setPower(power);
 
+        if(currentPosition != lastPosition) stabletimer.reset();
+
         telemetry.addData("pozitie", motor.getCurrentPosition());
         //telemetry.addData("power", power/battery);
 
@@ -79,5 +85,9 @@ public class Turret {
 
     public double getTurretAngle() {
         return (currentPosition / K);
+    }
+
+    public boolean isStable(){
+        return (stabletimer.seconds() > 0.3);
     }
 }

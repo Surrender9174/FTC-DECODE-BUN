@@ -19,7 +19,7 @@ public class Commands {
     private Chassis chassis;
     private Intake intake;
     private Transfer transfer;
-    //public Detection detection;
+    public Detection detection;
     private Turret turret;
     private Camera camera;
     private Shoot shoot;
@@ -30,7 +30,8 @@ public class Commands {
         chassis = objects.chassis;
         intake = objects.intake;
         transfer = objects.transfer;
-        //detection = new Detection(objects);
+        detection = new Detection(objects);
+        turret = objects.turret;
         this.robot = robot;
     }
     public void update()
@@ -40,13 +41,15 @@ public class Commands {
         else if(gamepad.left_trigger > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
         else intake.setState(Intake.StateIntake.INIT);
 
+        if(robot.isStable() && turret.isStable()) detection.startDectection();
+
         if(gamepad.right_bumper) transfer.setState(Transfer.StateTransfer.INIT);
 
         if(gamepad.options && !lastgamepad.options){
             robot.odometry.resetPosAndIMU();
         }
 
-        //detection.update();
+        detection.update();
         transfer.update();
     }
 }
