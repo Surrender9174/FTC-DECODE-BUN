@@ -24,14 +24,15 @@ public class AllObjects {
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
         activeIntake = new ActiveIntake(robot);
-        intake = new Intake(activeIntake, trapa, spindexer);
-
         trapa = new Trapa(robot);
         spindexer = new Spindexer(robot);
 
         camera = new Camera(robot);
         turret = new Turret(robot);
         shoot = new Shoot(robot);
+
+        intake = new Intake(activeIntake, trapa, spindexer);
+        detection = new Detection(camera, turret);
     }
 
     public void update() {

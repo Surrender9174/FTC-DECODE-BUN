@@ -15,6 +15,12 @@ public class Detection {
 
     public static double turretRadius, additionalDistance;
 
+    public Detection(Camera camera, Turret turret)
+    {
+        this.camera = camera;
+        this.turret = turret;
+    }
+
     public void update(){
         if(!camera.detected())
             return;
