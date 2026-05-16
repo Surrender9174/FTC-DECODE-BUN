@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Functions.Detection;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
 
 public class AllObjects {
     public ActiveIntake activeIntake;
@@ -19,7 +20,7 @@ public class AllObjects {
     private Camera camera;
     private Shoot shoot;
     private Spindexer spindexer;
-    private Detection detection;
+    private Outtake outtake;
 
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
@@ -27,24 +28,25 @@ public class AllObjects {
         trapa = new Trapa(robot);
         spindexer = new Spindexer(robot);
 
-        camera = new Camera(robot);
         turret = new Turret(robot);
+        camera = new Camera(robot);
         shoot = new Shoot(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
-        detection = new Detection(camera, turret);
+        outtake = new Outtake(turret , shoot, camera);
     }
 
     public void update() {
         chassis.updateFieldCentric();
         intake.update();
-        spindexer.update();
         activeIntake.update();
 
         trapa.update();
+        spindexer.update();
+
         turret.update();
         camera.update();
         shoot.update();
-        detection.update();
+        outtake.update();
     }
 }
