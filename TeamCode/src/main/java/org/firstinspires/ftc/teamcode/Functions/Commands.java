@@ -9,9 +9,11 @@ import org.firstinspires.ftc.teamcode.robot.AllObjects;
 public class Commands {
     private Chassis chassis;
     private Intake intake;
+    private Detection detection;
     public void init(AllObjects objects){
         chassis = objects.chassis;
         intake = objects.intake;
+        detection = new Detection(objects.camera, objects.turret);
     }
     public void update()
     {

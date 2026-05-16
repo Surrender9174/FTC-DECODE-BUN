@@ -27,12 +27,12 @@ public class Shoot {
 
         motor_w_encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor_w_encoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor_w_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor_w_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor_w_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor_wtht_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_wtht_encoder.setDirection(DcMotorSimple.Direction.FORWARD);
-        motor_wtht_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motor_wtht_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void update(){

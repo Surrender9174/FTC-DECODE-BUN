@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.teamcode.Objects.Shooter;
+package org.firstinspires.ftc.teamcode.Functions;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotY;
+
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 
 public class Detection {
     private Camera camera;
@@ -33,5 +36,8 @@ public class Detection {
 
         goalXfield = robotX + Math.cos(Math.toRadians(robotH)) * goalXrobot - Math.sin(Math.toRadians(robotH)) * goalYrobot;
         goalYfield = robotY + Math.sin(Math.toRadians(robotH)) * goalYrobot - Math.sin(Math.toRadians(robotH)) * goalXrobot;
+
+        goalX = goalXfield;
+        goalY = goalYfield;
     }
 }
