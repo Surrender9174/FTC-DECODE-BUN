@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 public class Hood {
     private Servo servoHood;
     public static double position;
-    private final double upperLimit=0.91, lowerLimit=0.13;
+    private final double upperLimit = 0.91, lowerLimit = 0.13;
     private boolean istarcking;
 
     public Hood(RobotHardware robot){
