@@ -27,6 +27,7 @@ public class Commands {
         else if(gamepad.left_trigger > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
         else intake.setState(Intake.StateIntake.INIT);
 
+
+        detection.update();
     }
-    detection.
 }
