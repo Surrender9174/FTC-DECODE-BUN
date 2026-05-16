@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 public class Hood {
     private Servo servoHood;
     public static double position;
+    private final double upperLimit=0.91, lowerLimit=0.13;
     private boolean istarcking;
 
     public Hood(RobotHardware robot){
@@ -18,11 +19,11 @@ public class Hood {
     }
 
     public void update(){
-        position = clamp(position, -1, 1);
+        position = clamp(position, lowerLimit, upperLimit);
         servoHood.setPosition(position);
     }
 
-    public void calculatePosition(double distance){
-        position = distance;
-    }
+   public void upperLimit(double position){
+
+   }
 }
