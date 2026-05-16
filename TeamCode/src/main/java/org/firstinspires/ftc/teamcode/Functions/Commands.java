@@ -28,5 +28,5 @@ public class Commands {
         else intake.setState(Intake.StateIntake.INIT);
 
     }
-    detection.update();
+    detection.
 }
