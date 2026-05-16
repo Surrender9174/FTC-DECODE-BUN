@@ -32,21 +32,21 @@ public class Intake {
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.INIT);
                     trapa.setState(Trapa.StateTrapa.OUTTAKE);
 
-                    spindexer.setTargetPosition(Spindexer.POS_INTAKE);
+                    spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
 
                     break;
                 case INTAKE:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
                     trapa.setState(Trapa.StateTrapa.INTAKE);
 
-                    spindexer.setTargetPosition(Spindexer.POS_INTAKE);
+                    spindexer.setState(Spindexer.StateSpindexer.INTAKE);
 
                     break;
                 case OUTTAKE:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.OUTTAKE);
                     trapa.setState(Trapa.StateTrapa.INTAKE);
 
-                    spindexer.setTargetPosition(Spindexer.POS_INTAKE);
+                    //spindexer.setState(Spindexer.POS_INTAKE);
                     break;
             }
         }

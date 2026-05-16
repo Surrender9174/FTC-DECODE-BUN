@@ -135,12 +135,12 @@ public class RobotHardware {
     }
 
     public void update() {
-        telemetry.addData("Baterie", battery);
+        //telemetry.addData("Baterie", battery);
 
         lastgamepad.copy(gamepad);
         lastgamepad2.copy(gamepad2);
 
-        telemetry.addData("FPS", lastCnt);
+        //telemetry.addData("FPS", lastCnt);
 
         if (timer.seconds() > 1) {
             lastCnt = cnt;
@@ -173,11 +173,11 @@ public class RobotHardware {
         if (!Double.isNaN(pos.getX(DistanceUnit.CM))) robotY = pos.getX(DistanceUnit.CM);
         if (!Double.isNaN(pos.getHeading(AngleUnit.DEGREES))) robotH = pos.getHeading(AngleUnit.DEGREES) + 90;
 
-        telemetry.addData("X", robotX);
-        telemetry.addData("Y", robotY);
-        telemetry.addData("H", robotH);
+        //telemetry.addData("X", robotX);
+        //telemetry.addData("Y", robotY);
+        //telemetry.addData("H", robotH);
 
-        telemetry.update();
+        //telemetry.update();
         //dashboardTelemetry.update();
 
 
