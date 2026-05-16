@@ -36,91 +36,74 @@ public class Spindexer {
         CHAMBERLEFT,
         CHAMBERRIGHT;
     }
+    private states state;
+    public Spindexer(RobotHardware hardware)
+    {
+        servo1 = hardware.servoSpindexer1;
+        servo2 = hardware.servoSpindexer2;
+        sensor = hardware.spindexerPosition;
+        encoder = hardware.motorShooter6;
 
-    private StateSpindexer state, laststate;
-
-    public Spindexer(RobotHardware robot){
-        servospin1 = robot.servoSpindexer1;
-        servospin2 = robot.servoSpindexer2;
-
-        position = robot.spindexerPosition;
-        encoder = robot.motorShooter6;
-
-        encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        state = StateSpindexer.INTAKE;
-        //targetPositon = POS_INTAKE;
-        UseKs = false;
-
-        FirstFrame = true;
-        setSpeed(0);
-
-        //initPosEncoder = (position.getVoltage() / 3.214 * 360) % 180 * 2;
-        //offset = (initPosEncoder - initPosAnalog) * K;
-
-
+        state = states.Chamber1;
+        constantChange = 8192 / 360;
+        encoderOffset = degreestotick(sensor.getVoltage() / 3.3 * 2 * 360);
     }
-    public void update(){
-        if(FirstFrame){
-            initPosEncoder = (position.getVoltage() / 3.214 * 360) % 180 * 2;
-            offset = (initPosEncoder - initPosAnalog) * K;
-
-            FirstFrame = false;
+    public void update()
+    {
+        switch(state)
+        {
+            case Chamber1:
+                targetPos = chamber1;
+                rapidfire = false;
+                break;
+            case Chamber2:
+                targetPos = chamber2;
+                rapidfire = false;
+                break;
+            case Chamber3:
+                targetPos = chamber3;
+                rapidfire = false;
+                break;
+            case Intake:
+                targetPos = intake;
+                rapidfire = false;
+                break;
         }
-       /* if(state != laststate){
-            switch (state){
-                case INTAKE:
-                    targetPositon = POS_INTAKE;
-
-                    break;
-                case CHAMBERFRONT:
-                    targetPositon = POS_CHAMBERFRONT;
-
-                    break;
-                case CHAMBERLEFT:
-                    targetPositon = POS_CHAMBERLEFT;
-
-                    break;
-                case CHAMBERRIGHT:
-                    targetPositon = POS_CHAMBERRIGHT;
-
-                    break;
-            }
-
-        }
-        laststate = state;*/
-
-        currentPosition = (encoder.getCurrentPosition() + offset) % 8192;
-
-        error = targetPosition - currentPosition;
-
-        if (error > 180 * K) error = error - 360 * K;
-        if (error < -180 * K) error = error + 360 * K;
-
-        currentSpeed = (currentPosition - lastPosition) / timer.seconds();
-
-        power = kp * error + (-currentSpeed) * kd;
-
-        if(error >= 4) UseKs = true;
-        else if (error <= 3) UseKs = false;
-
-        if(UseKs) power = power + ks;
-
-        setSpeed(power / battery);
+        currentPosition = ticktodegrees((encoder.getCurrentPosition() + encoderOffset)%8192);
+        telemetry.addData("AnalogPos:", ((sensor.getVoltage() / 3.3 * 360)%180)*2);
+        speed = encoder.getVelocity();
+        error = targetPos - currentPosition;
 
 
-        lastPosition = currentPosition;
-        timer.reset();
+        if(error < 3) { useKs = true; }
+        else if(error > 5) { useKs = false; }
 
-        telemetry.addData("CurrentPosition", (currentPosition / K));
+        if(error < 180) error -= 360;
+        else if(error > -180) error += 360;
+
+        power = (-speed) * kD + error * kP;
+
+        if(useKs) { power += Math.signum(error) * kF; }
+
+        setPower(power);
+
+        telemetry.addData("SensorVoltage ", currentReading);
+        telemetry.addData("Position", ticktodegrees(currentPosition));
+        telemetry.addData("EncoderReading", currentPosition);
     }
-    public void setSpeed(double power){
-        servospin1.setPower(power);
-        servospin2.setPower(power);
+    public void setPower(double power)
+    {
+        servo1.setPower(power);
+        servo2.setPower(power);
     }
-
-    public void setTargetPosition(double target){
-        this.targetPosition = target * K;
+    public double ticktodegrees(double ticks)
+    {
+        double degrees = ticks / constantChange;
+        return degrees;
+    }
+    public double degreestotick(double degrees)
+    {
+        double ticks = degrees * constantChange;
+        return ticks;
     }
 }
