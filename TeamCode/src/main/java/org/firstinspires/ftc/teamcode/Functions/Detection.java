@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Functions;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.detect;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalHeight;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
@@ -45,6 +46,8 @@ public class Detection {
 
         goalXfield = robotX + Math.cos(Math.toRadians(robotH)) * goalXrobot - Math.sin(Math.toRadians(robotH)) * goalYrobot;
         goalYfield = robotY + Math.sin(Math.toRadians(robotH)) * goalYrobot - Math.sin(Math.toRadians(robotH)) * goalXrobot;
+
+        goalHeight = camera.getGoalHeight();
 
         goalX = goalXfield;
         goalY = goalYfield;

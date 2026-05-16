@@ -39,7 +39,7 @@ public class AllObjects {
 
         shoot = new Shoot(robot);
         hood = new Hood(robot);
-        //camera = new Camera(robot);
+        camera = new Camera(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
         transfer = new Transfer(spindexer, trapa);
