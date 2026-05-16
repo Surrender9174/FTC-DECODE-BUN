@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Objects/Shooter/Camera.java
 package org.firstinspires.ftc.teamcode.Objects.Shooter;
+========
+package org.firstinspires.ftc.teamcode.Objects.Turreta;
+>>>>>>>> origin/erabun:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Objects/Turreta/Camera.java
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.*;

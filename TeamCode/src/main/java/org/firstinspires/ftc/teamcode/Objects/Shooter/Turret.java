@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Objects/Shooter/Turret.java
 package org.firstinspires.ftc.teamcode.Objects.Shooter;
+========
+package org.firstinspires.ftc.teamcode.Objects.Turreta;
+>>>>>>>> origin/erabun:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Objects/Turreta/Turret.java
 
 import static com.pedropathing.math.MathFunctions.clamp;
 

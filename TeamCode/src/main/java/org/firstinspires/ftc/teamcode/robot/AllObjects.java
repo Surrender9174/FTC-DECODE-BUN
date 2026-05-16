@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import org.firstinspires.ftc.teamcode.Objects.Drivetrain.Chassis;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
+import org.firstinspires.ftc.teamcode.Objects.Indexer.Transfer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
@@ -23,10 +24,14 @@ public class AllObjects {
     private Spindexer spindexer;
     private Outtake outtake;
 
+    public Transfer transfer;
+
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
         activeIntake = new ActiveIntake(robot);
         trapa = new Trapa(robot);
+        camera = new Camera(robot);
+        turret = new Turret(robot);
         spindexer = new Spindexer(robot);
 
         turret = new Turret(robot);
@@ -35,7 +40,7 @@ public class AllObjects {
         hood = new Hood(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
-        outtake = new Outtake(shoot, turret, camera);
+        transfer = new Transfer(spindexer, trapa);
     }
 
     public void update() {
