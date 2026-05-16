@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes.teleOP;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,6 +18,7 @@ public class BlueTeleOP extends OpMode {
     @Override
     public void init() {
         StaticVariables.init(hardwareMap, telemetry, gamepad1, gamepad2);
+        alliance = 1;
 
         robot = new RobotHardware();
         robot.init();

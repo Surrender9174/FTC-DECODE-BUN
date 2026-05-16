@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotY;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
@@ -31,8 +32,13 @@ public class Detection {
 
         if(!detect) return;
 
+        camera.searchGoal();
+        camera.detectGoal();
         goalX = camera.getGoalX();
         goalY = camera.getGoalY();
+
+        telemetry.addData("X", goalX);
+        telemetry.addData("Y", goalY);
 
         goalXrobot = Math.cos(Math.toRadians(turret.getTurretAngle())) * turretRadius + goalX * Math.cos(Math.toRadians(turret.getTurretAngle() - 90)) - goalY * Math.sin(Math.toRadians(turret.getTurretAngle() - 90));
         goalYrobot = additionalDistance + Math.sin(Math.toRadians(turret.getTurretAngle())) * turretRadius + goalX * Math.sin(Math.toRadians(turret.getTurretAngle() - 90)) + goalY * Math.cos(Math.toRadians(turret.getTurretAngle() - 90));

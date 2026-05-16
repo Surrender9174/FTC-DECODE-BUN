@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.basic_functions;
 
+import static androidx.core.math.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
@@ -39,26 +40,35 @@ public class Outtake {
 
     private boolean transferMode;
 
-    public Outtake(Shoot shoot, Turret turret, Camera camera) {
+    public Outtake(Shoot shoot, Turret turret, Camera camera, Hood hood) {
         shooter = shoot;
         this.turret = turret;
+        this.camera = camera;
+        this.hood = hood;
         this.detection = new Detection(camera, turret);
         timerstatic.reset();
     }
 
     public void update() {
         camera.update();
-        detection.update();
-        goalAngle = Math.toDegrees(Math.atan2(goalY - robotY, goalX - robotX));
-        goalDistance = Math.hypot(goalX - robotX, goalY - robotY);
-        turret.setTargetPosition(robotH - goalAngle + 180);
+
         if (Math.abs(robotX - lastRobotX) > 3 || Math.abs(robotY - lastRobotY) > 3)
             timerstatic.reset();
 
         if (timerstatic.time(TimeUnit.SECONDS) > 2) detect = true;
+        detection.update();
+
+        goalAngle = Math.toDegrees(Math.atan2(goalY - robotY, goalX - robotX));
+        goalDistance = Math.hypot(goalX - robotX, goalY - robotY);
+
+        turretAngle = robotH - goalAngle + 180;
 
         if (turretAngle > 180) turretAngle = turretAngle - 360;
         if (turretAngle < -180) turretAngle = turretAngle + 360;
+
+        turretAngle = clamp(turretAngle, -170, 160);
+
+        turret.setTargetPosition(turretAngle);
 
         if (goalX != 0 && goalY != 0) {
             if (!camera.isTrackingMotif())

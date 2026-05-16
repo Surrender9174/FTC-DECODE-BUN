@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Objects/Shooter/Camera.java
 package org.firstinspires.ftc.teamcode.Objects.Shooter;
-========
-package org.firstinspires.ftc.teamcode.Objects.Turreta;
->>>>>>>> origin/erabun:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Objects/Turreta/Camera.java
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.*;
@@ -75,6 +71,7 @@ public class Camera {
 
     public void update() {
         if (trackingGoal) {
+
             LLResult result = limelight.getLatestResult();
 
             if (result != null && result.isValid()) {
@@ -84,6 +81,8 @@ public class Camera {
                 }
             }
         }
+        telemetry.addData("IDK", trackingGoal);
+
     }
     public void searchForMotif() {
         trackingGoal = true;

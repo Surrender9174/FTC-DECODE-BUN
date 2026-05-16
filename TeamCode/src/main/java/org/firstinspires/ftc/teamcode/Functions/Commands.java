@@ -29,7 +29,6 @@ public class Commands {
         else intake.setState(Intake.StateIntake.INIT);
 
         if(gamepad.right_bumper) transfer.setState(Transfer.StateTransfer.INIT);
-        telemetry.addData("Button", gamepad.right_bumper);
 
         if(gamepad.options && !lastgamepad.options){
             robot.odometry.resetPosAndIMU();
