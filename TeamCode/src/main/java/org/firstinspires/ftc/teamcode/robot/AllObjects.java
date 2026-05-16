@@ -5,7 +5,6 @@ import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
-import org.firstinspires.ftc.teamcode.Objects.Shooter.Detection;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Hood;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
@@ -18,7 +17,7 @@ public class AllObjects {
     public Trapa trapa;
     public Chassis chassis;
     public Turret turret;
-    private Camera camera;
+    public Camera camera;
     private Shoot shoot;
     private Hood hood;
     private Spindexer spindexer;
@@ -36,7 +35,7 @@ public class AllObjects {
         hood = new Hood(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
-        outtake = new Outtake(turret , shoot, camera);
+        outtake = new Outtake(shoot , turret, camera);
     }
 
     public void update() {
