@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
-import org.firstinspires.ftc.teamcode.Objects.Shooter.Detection;
+import org.firstinspires.ftc.teamcode.Functions.Detection;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
