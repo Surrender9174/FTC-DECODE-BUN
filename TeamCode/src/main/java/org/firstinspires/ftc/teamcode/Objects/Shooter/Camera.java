@@ -81,7 +81,7 @@ public class Camera {
                 }
             }
         }
-        telemetry.addData("IDK", trackingGoal);
+        telemetry.addData("ID", ID);
 
     }
     public void searchForMotif() {
