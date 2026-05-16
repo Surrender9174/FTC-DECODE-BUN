@@ -35,7 +35,7 @@ public class AllObjects {
         hood = new Hood(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
-        outtake = new Outtake(shoot, turret, camera);
+        outtake = new Outtake(turret, shoot, hood, spindexer, trapa, camera);
     }
 
     public void update() {
