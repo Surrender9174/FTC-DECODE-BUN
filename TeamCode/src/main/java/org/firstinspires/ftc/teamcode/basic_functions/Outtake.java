@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.detect;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.externalhardware.RobotHardware;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.robot.AllObjects;
 
 import java.util.concurrent.TimeUnit;
 
+@Configurable
 public class Outtake {
     private Camera camera;
 
@@ -65,10 +67,11 @@ public class Outtake {
 //            shooter.setTargetSpeed(shooterSpeed);
 //            hood.setPosition(anglePosition - shooter.speedDifference() * KangleAdjustment);
 
-            if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance));
+            /*if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance));
             else shooter.setTargetSpeed(2000);
 
             hood.setPosition(getAngle(goalDistance) - shooter.speedDifference() * KangleAdjustment);
+            */
 
             lastRobotX = robotX;
             lastRobotY = robotY;
