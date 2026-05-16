@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.detection;
+package org.firstinspires.ftc.teamcode.Objects.Turreta;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.*;

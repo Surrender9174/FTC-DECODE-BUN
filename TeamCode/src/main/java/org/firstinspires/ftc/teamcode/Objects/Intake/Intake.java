@@ -46,7 +46,7 @@ public class Intake {
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.OUTTAKE);
                     trapa.setState(Trapa.StateTrapa.INTAKE);
 
-                    //spindexer.setState(Spindexer.POS_INTAKE);
+                    spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
                     break;
             }
         }

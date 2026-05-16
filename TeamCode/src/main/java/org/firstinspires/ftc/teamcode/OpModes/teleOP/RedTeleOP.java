@@ -28,12 +28,12 @@ public class RedTeleOP extends OpMode {
         objects.init(robot);
 
         commands = new Commands();
-        commands.init(objects);
+        commands.init(objects, robot);
     }
     @Override
     public void loop() {
+        commands.update();
         robot.update();
         objects.update();
-        commands.update();
     }
 }

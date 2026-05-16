@@ -1,17 +1,25 @@
 package org.firstinspires.ftc.teamcode.Functions;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.gamepad;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.lastgamepad;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import org.firstinspires.ftc.teamcode.Objects.Drivetrain.Chassis;
+import org.firstinspires.ftc.teamcode.Objects.Indexer.Transfer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
+import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
 public class Commands {
+    private RobotHardware robot;
     private Chassis chassis;
     private Intake intake;
-    public void init(AllObjects objects){
+    private Transfer transfer;
+    public void init(AllObjects objects, RobotHardware robot){
         chassis = objects.chassis;
         intake = objects.intake;
+        transfer = objects.transfer;
+        this.robot = robot;
     }
     public void update()
     {
@@ -20,5 +28,11 @@ public class Commands {
         else if(gamepad.left_trigger > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
         else intake.setState(Intake.StateIntake.INIT);
 
+        if(gamepad.right_bumper) transfer.setState(Transfer.StateTransfer.INIT);
+        telemetry.addData("Button", gamepad.right_bumper);
+
+        if(gamepad.options && !lastgamepad.options){
+            robot.odometry.resetPosAndIMU();
+        }
     }
 }
