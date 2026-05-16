@@ -17,7 +17,7 @@ public class AllObjects {
     public Trapa trapa;
     public Chassis chassis;
     public Turret turret;
-    private Camera camera;
+    public Camera camera;
     private Shoot shoot;
     private Spindexer spindexer;
     private Outtake outtake;
@@ -33,7 +33,7 @@ public class AllObjects {
         shoot = new Shoot(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
-        outtake = new Outtake(turret , shoot, camera);
+        outtake = new Outtake(shoot, turret, camera);
     }
 
     public void update() {

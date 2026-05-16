@@ -13,6 +13,17 @@ public class Outtake {
     private Turret turret;
     private Shoot shoot;
     private Detection detection;
-(??)
-(??)
+
+    public Outtake(Shoot shoot, Turret turret, Camera camera)
+    {
+        this.shoot = shoot;
+        this.turret = turret;
+        this.detection = new Detection(camera, turret);
+    }
+
+    public void update()
+    {
+        detection.update();
+        turret.setTargetPosition(0);
+    }
 }

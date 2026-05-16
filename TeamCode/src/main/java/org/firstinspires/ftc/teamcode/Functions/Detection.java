@@ -36,5 +36,8 @@ public class Detection {
 
         goalXfield = robotX + Math.cos(Math.toRadians(robotH)) * goalXrobot - Math.sin(Math.toRadians(robotH)) * goalYrobot;
         goalYfield = robotY + Math.sin(Math.toRadians(robotH)) * goalYrobot - Math.sin(Math.toRadians(robotH)) * goalXrobot;
+
+        goalX = goalXfield;
+        goalY = goalYfield;
     }
 }
