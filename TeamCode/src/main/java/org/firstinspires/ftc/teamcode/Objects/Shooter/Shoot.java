@@ -4,12 +4,14 @@ import static com.pedropathing.math.MathFunctions.clamp;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
+@Configurable
 public class Shoot {
     public DcMotorEx motor_w_encoder;
     public DcMotorEx motor_wtht_encoder;

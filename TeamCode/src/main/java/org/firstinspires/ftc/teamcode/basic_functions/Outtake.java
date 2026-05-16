@@ -12,7 +12,6 @@ public class Outtake {
     private Detection detection;
     private Turret turret;
     private Shoot shoot;
-    private Detection detection;
 
     public Outtake(Shoot shoot, Turret turret, Camera camera)
     {
