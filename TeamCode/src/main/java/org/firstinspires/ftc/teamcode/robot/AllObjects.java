@@ -5,12 +5,10 @@ import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
-import org.firstinspires.ftc.teamcode.Shooter.Detection;
-import org.firstinspires.ftc.teamcode.Shooter.Shoot;
-import org.firstinspires.ftc.teamcode.Shooter.Turret;
-import org.firstinspires.ftc.teamcode.Shooter.Camera;
-
-import javax.xml.parsers.SAXParser;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Detection;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
 
 public class AllObjects {
     public ActiveIntake activeIntake;
