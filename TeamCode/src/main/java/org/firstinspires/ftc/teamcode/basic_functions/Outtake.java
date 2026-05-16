@@ -85,10 +85,10 @@ public class Outtake{
     }
 
     private double getShooterSpeed(double x) {
-
+        return 0;
     }
     private double getAngle(double x) {
-
+        return 0;
     }
     private double getTime(double x) {
         return 0.9;
