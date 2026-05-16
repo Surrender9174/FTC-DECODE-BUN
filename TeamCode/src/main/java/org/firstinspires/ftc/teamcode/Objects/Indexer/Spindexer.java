@@ -18,24 +18,22 @@ public class Spindexer {
     private DcMotor encoder;
     private AnalogInput position;
     private ElapsedTime timer = new ElapsedTime();
-    private static double kp = 0, kd = 0, ks = 0;
+    private static double kp = 0.0028, kd = 0.000235, ks = 0.19;
     private double error, currentSpeed, power;
     private double currentPosition, lastPosition;
 
     private double initPosAnalog = 150;
     private double initPosEncoder, offset;
-
-    private double targetPosition = 0;
-    public static final double POS_INTAKE = 2, POS_CHAMBERFRONT = 10, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
-    public boolean UseKs, FirstFrame = true;
     public static double K = 22.7555555555556;
+    private double targetPosition = 0;
+    public static final double POS_INTAKE = 0, POS_CHAMBERFRONT = 100*K, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public boolean UseKs, FirstFrame = true;
     public enum StateSpindexer{
         CHAMBERFRONT,
         INTAKE,
         CHAMBERLEFT,
         CHAMBERRIGHT;
     }
-
     private StateSpindexer state, laststate;
 
     public Spindexer(RobotHardware robot){
@@ -67,22 +65,22 @@ public class Spindexer {
 
             FirstFrame = false;
         }
-       /* if(state != laststate){
+       /*if(state != laststate){
             switch (state){
                 case INTAKE:
-                    targetPositon = POS_INTAKE;
+                    targetPosition = POS_INTAKE;
 
                     break;
                 case CHAMBERFRONT:
-                    targetPositon = POS_CHAMBERFRONT;
+                    targetPosition = POS_CHAMBERFRONT;
 
                     break;
                 case CHAMBERLEFT:
-                    targetPositon = POS_CHAMBERLEFT;
+                    targetPosition = POS_CHAMBERLEFT;
 
                     break;
                 case CHAMBERRIGHT:
-                    targetPositon = POS_CHAMBERRIGHT;
+                    targetPosition = POS_CHAMBERRIGHT;
 
                     break;
             }
@@ -92,34 +90,39 @@ public class Spindexer {
 
         currentPosition = (encoder.getCurrentPosition() + offset) % 8192;
 
-        error = targetPosition - currentPosition;
+        currentPosition = 360 * K - currentPosition;
+
+        error =  targetPosition - currentPosition;
 
         if (error > 180 * K) error = error - 360 * K;
         if (error < -180 * K) error = error + 360 * K;
 
         currentSpeed = (currentPosition - lastPosition) / timer.seconds();
 
-        power = kp * error + (-currentSpeed) * kd;
+        if(Math.abs(error) >= 3*K) UseKs = true;
+        else if (Math.abs(error) <= 1*K) UseKs = false;
 
-        if(error >= 4) UseKs = true;
-        else if (error <= 3) UseKs = false;
+        power = kp * error + kd * (-currentSpeed);
 
-        if(UseKs) power = power + ks;
+        if(UseKs) power = power + Math.signum(error) * ks;
 
-        setSpeed(power / battery);
+        setSpeed(power/battery);
 
+        telemetry.addData("Power", power);
+        telemetry.addData("Error", error);
+        telemetry.addData("CurrentSpeed", currentSpeed);
 
         lastPosition = currentPosition;
         timer.reset();
 
-        telemetry.addData("CurrentPosition", (currentPosition / K));
+        telemetry.addData("CurrentPosition", (currentPosition));
     }
     public void setSpeed(double power){
         servospin1.setPower(power);
         servospin2.setPower(power);
     }
 
-    public void setTargetPosition(double target){
-        this.targetPosition = target * K;
+    public void setState(StateSpindexer state){
+        this.state = state;
     }
 }

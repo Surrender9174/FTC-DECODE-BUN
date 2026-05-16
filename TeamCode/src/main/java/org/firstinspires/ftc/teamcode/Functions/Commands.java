@@ -19,5 +19,6 @@ public class Commands {
         if(gamepad.right_trigger > 0.1) intake.setState(Intake.StateIntake.INTAKE);
         else if(gamepad.left_trigger > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
         else intake.setState(Intake.StateIntake.INIT);
+
     }
 }
