@@ -76,7 +76,7 @@ public class Camera {
                     ID = fr.getFiducialId();
                 }
             }
-        telemetry.addData("IDK", trackingGoal);
+        telemetry.addData("ID", ID);
 
     }
     public void searchForMotif() {
