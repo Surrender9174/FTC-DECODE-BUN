@@ -23,7 +23,7 @@ public class Hood {
         servoHood.setPosition(position);
     }
 
-   public void upperLimit(double position){
+   public void setPosition(double position){
 
    }
 }
