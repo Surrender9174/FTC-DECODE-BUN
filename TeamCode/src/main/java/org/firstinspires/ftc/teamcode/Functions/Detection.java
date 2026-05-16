@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Functions;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.detect;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
@@ -28,6 +29,8 @@ public class Detection {
         if(!camera.detected())
             return;
 
+        if(!detect) return;
+
         goalX = camera.getGoalX();
         goalY = camera.getGoalY();
 
@@ -39,5 +42,7 @@ public class Detection {
 
         goalX = goalXfield;
         goalY = goalYfield;
+
+        detect = false;
     }
 }

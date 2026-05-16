@@ -20,6 +20,7 @@ public abstract class StaticVariables {
     public static double robotVelocity, robotVelocityAngle;
 
     public static int pattern;
+    public static boolean detect;
 
     //public static FtcDashboard dashboard = FtcDashboard.getInstance();
     //public static Telemetry dashboardTelemetry = dashboard.getTelemetry();
