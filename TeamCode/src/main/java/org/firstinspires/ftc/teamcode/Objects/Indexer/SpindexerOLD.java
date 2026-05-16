@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
-public class SpindexerOLD {
+public class Spindexer {
     private CRServo servospin1, servospin2;
     private AnalogInput position;
     private double kp, ki, kd, ks;
-    public double targetPositon, currentPosition;
+    private double targetPositon, currentPosition;
     public enum StateSpindexer{
         CHAMBERFRONT,
         INTAKE,
@@ -22,8 +22,6 @@ public class SpindexerOLD {
     public void init(RobotHardware robot){
         servospin1 = robot.servoSpindexer1;
         servospin2 = robot.servoSpindexer2;
-
-        position = robot.spindexerPosition;
 
     }
     public void update(){
@@ -50,5 +48,6 @@ public class SpindexerOLD {
         }
         laststate = state;
     }
+    currentPosition = position.getVoltage();
 }
 
