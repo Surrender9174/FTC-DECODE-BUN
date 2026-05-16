@@ -65,7 +65,6 @@ public class Turret {
 
 
         power = clamp(power/battery, -1, 1);
-
         motor.setPower(power);
 
         telemetry.addData("pozitie", motor.getCurrentPosition());

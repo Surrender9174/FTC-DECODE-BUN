@@ -12,7 +12,6 @@ public class Outtake {
     private Detection detection;
     private Turret turret;
     private Shoot shoot;
-    private Detection detection;
 
     public Outtake(Turret turret, Shoot shoot, Camera camera){
         this.turret = turret;
