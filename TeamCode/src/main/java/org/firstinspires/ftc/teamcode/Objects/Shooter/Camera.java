@@ -38,6 +38,8 @@ public class Camera {
     }
 
     public void detectGoal() {
+        telemetry.addData("Am intrat in detection", 0);
+
         detected = false;
 
         LLResult result = limelight.getLatestResult();

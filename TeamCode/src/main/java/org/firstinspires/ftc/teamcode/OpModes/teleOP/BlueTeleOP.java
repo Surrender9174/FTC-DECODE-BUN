@@ -31,6 +31,8 @@ public class BlueTeleOP extends OpMode {
 
         commands = new Commands();
         commands.init(objects, robot);
+
+        //commands.detection.setCoeffs(5, 15);
     }
     @Override
     public void loop() {

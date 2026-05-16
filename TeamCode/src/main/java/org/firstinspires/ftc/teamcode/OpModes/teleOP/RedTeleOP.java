@@ -32,11 +32,18 @@ public class RedTeleOP extends OpMode {
 
         commands = new Commands();
         commands.init(objects, robot);
+
+        //commands.detection.setCoeffs(5, 15);
     }
     @Override
     public void loop() {
         commands.update();
         robot.update();
         objects.update();
+
+        objects.camera.detectGoal();
+        telemetry.addData("X",objects.camera.getGoalX());
+        telemetry.addData("Y",objects.camera.getGoalY());
+
     }
 }

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Objects.Shooter.Hood;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
-import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
 
 public class AllObjects {
     public ActiveIntake activeIntake;
@@ -22,7 +21,7 @@ public class AllObjects {
     private Shoot shoot;
     private Hood hood;
     private Spindexer spindexer;
-    private Outtake outtake;
+    //private Outtake outtake;
 
     public Transfer transfer;
 
@@ -43,7 +42,7 @@ public class AllObjects {
 
         intake = new Intake(activeIntake, trapa, spindexer);
         transfer = new Transfer(spindexer, trapa);
-        outtake = new Outtake(shoot, turret, camera, hood);
+        //outtake = new Outtake(shoot, turret, camera, hood);
     }
 
     public void update() {
@@ -56,10 +55,8 @@ public class AllObjects {
 
         shoot.update();
         hood.update();
-        outtake.update();
-
         intake.update();
         transfer.update();
-        outtake.update();
+        //outtake.update();
     }
 }
