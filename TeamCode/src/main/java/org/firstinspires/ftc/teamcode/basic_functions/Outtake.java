@@ -21,35 +21,63 @@ import java.util.concurrent.TimeUnit;
 
 public class Outtake {
     private Camera camera;
+
+
+    public static double shooterSpeed = 0, anglePosition = 0.09;
+    public static double KangleAdjustment = 0;
+
     private Detection detection;
     private Turret turret;
-    private Shoot shoot;
+    private Shoot shooter;
     private Hood hood;
     private double goalAngle, goalDistance;
     private double lastRobotX, lastRobotY;
     private ElapsedTime timerstatic = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+    private double turretAngle;
 
-    public Outtake(Shoot shoot, Turret turret, Camera camera)
-    {
-        this.shoot = shoot;
+    private boolean transferMode;
+
+    public Outtake(Shoot shoot, Turret turret, Camera camera) {
+        shooter = shoot;
         this.turret = turret;
         this.detection = new Detection(camera, turret);
         timerstatic.reset();
     }
 
-    public void update()
-    {
+    public void update() {
         camera.update();
         detection.update();
         goalAngle = Math.toDegrees(Math.atan2(goalY - robotY, goalX - robotX));
-        goalDistance = Math.hypot(goalX-robotX, goalY-robotY);
+        goalDistance = Math.hypot(goalX - robotX, goalY - robotY);
         turret.setTargetPosition(robotH - goalAngle + 180);
-        if(Math.abs(robotX-lastRobotX) > 3 || Math.abs(robotY-lastRobotY) > 3) timerstatic.reset();
+        if (Math.abs(robotX - lastRobotX) > 3 || Math.abs(robotY - lastRobotY) > 3)
+            timerstatic.reset();
 
-        if(timerstatic.time(TimeUnit.SECONDS) > 2) detect = true;
+        if (timerstatic.time(TimeUnit.SECONDS) > 2) detect = true;
 
-        lastRobotX = robotX;
-        lastRobotY = robotY;
+        if (turretAngle > 180) turretAngle = turretAngle - 360;
+        if (turretAngle < -180) turretAngle = turretAngle + 360;
 
+        if (goalX != 0 && goalY != 0) {
+            if (!camera.isTrackingMotif())
+                turret.setTargetPosition(turretAngle);
+
+//            shooter.setTargetSpeed(shooterSpeed);
+//            hood.setPosition(anglePosition - shooter.speedDifference() * KangleAdjustment);
+
+            if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance));
+            else shooter.setTargetSpeed(2000);
+
+            hood.setPosition(getAngle(goalDistance) - shooter.speedDifference() * KangleAdjustment);
+
+            lastRobotX = robotX;
+            lastRobotY = robotY;
+            }
+        }
+    public double getShooterSpeed(double dist) {
+        return dist;
+    }
+    public double getAngle(double angle){
+        return angle;
     }
 }
