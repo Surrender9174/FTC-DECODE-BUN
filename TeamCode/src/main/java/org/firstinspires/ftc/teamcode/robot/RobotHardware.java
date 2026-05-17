@@ -95,9 +95,9 @@ public class RobotHardware {
 
         // ODOMETRY
         odometry = hardwareMap.get(GoBildaPinpointDriver.class, "odometry");
-        odometry.setOffsets(-113 ,-142, DistanceUnit.MM);
+        odometry.setOffsets(-114 ,-174, DistanceUnit.MM);
         odometry.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odometry.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odometry.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odometry.resetPosAndIMU();
         odometry.recalibrateIMU();
 
