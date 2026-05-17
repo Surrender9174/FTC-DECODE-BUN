@@ -2,14 +2,14 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import org.firstinspires.ftc.teamcode.Objects.Drivetrain.Chassis;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
-import org.firstinspires.ftc.teamcode.Objects.Indexer.Transfer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Hood;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
-import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
 
 public class AllObjects {
     public ActiveIntake activeIntake;
@@ -21,28 +21,21 @@ public class AllObjects {
     private Shoot shoot;
     private Hood hood;
     private Spindexer spindexer;
-    //private Outtake outtake;
-
-    public Transfer transfer;
-
-    public void init_camera(RobotHardware robot){
-        camera = new Camera(robot);
-    }
+    private Outtake outtake;
 
     public void init(RobotHardware robot) {
         chassis = new Chassis(robot);
         activeIntake = new ActiveIntake(robot);
-        turret = new Turret(robot);
         trapa = new Trapa(robot);
         spindexer = new Spindexer(robot);
 
+        turret = new Turret(robot);
+        camera = new Camera(robot);
         shoot = new Shoot(robot);
         hood = new Hood(robot);
-        camera = new Camera(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer);
-        transfer = new Transfer(spindexer, trapa);
-        //outtake = new Outtake(shoot, turret, camera, hood);
+        outtake = new Outtake(turret, shoot, hood, spindexer, trapa, camera);
     }
 
     public void update() {
@@ -53,10 +46,10 @@ public class AllObjects {
         trapa.update();
         spindexer.update();
 
+        turret.update();
+        camera.update();
         shoot.update();
         hood.update();
-        intake.update();
-        transfer.update();
-        //outtake.update();
+        outtake.update();
     }
 }

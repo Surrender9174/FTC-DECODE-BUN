@@ -19,7 +19,7 @@ public class Camera {
 
     private boolean detected;
 
-    private double x = 0, y = 0, z = 0, lastX, lastY, lastZ;
+    private double x = 0, y = 0, z = 0, lastX, lastY, lastZ, last_lastX, last_lastY, last_lastZ;
 
     private Pose3D position;
 
@@ -38,8 +38,9 @@ public class Camera {
     }
 
     public void detectGoal() {
-        telemetry.addData("Am intrat in detection", 0);
+        //if (trackingGoal) return;
 
+        telemetry.addData("Am intrat in detection", 0);
         detected = false;
 
         LLResult result = limelight.getLatestResult();
@@ -70,6 +71,7 @@ public class Camera {
     }
 
     public void update() {
+        if (trackingGoal) {
             LLResult result = limelight.getLatestResult();
 
             if (result != null && result.isValid()) {
@@ -78,8 +80,7 @@ public class Camera {
                     ID = fr.getFiducialId();
                 }
             }
-        telemetry.addData("ID", ID);
-
+        }
     }
     public void searchForMotif() {
         trackingGoal = true;
@@ -130,5 +131,12 @@ public class Camera {
     }
     public void stop() {
         stopped = false;
+    }
+
+    public void resetDetection() {
+        x = 0; y = 0; z = 0;
+        lastX = 0; lastY = 0; lastZ = 0;
+        last_lastX = 0; last_lastY = 0; last_lastZ = 0;
+        goalX = 0; goalY = 0;
     }
 }
