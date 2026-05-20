@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.PanelTelemetry;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.hardwareMap;
 //import static org.firstinspires.ftc.teamcode.Robot.StaticVariables.lastgamepad2;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
@@ -95,9 +96,9 @@ public class RobotHardware {
 
         // ODOMETRY
         odometry = hardwareMap.get(GoBildaPinpointDriver.class, "odometry");
-        odometry.setOffsets(-113 ,-142, DistanceUnit.MM);
+        odometry.setOffsets(114 ,-174, DistanceUnit.MM);
         odometry.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odometry.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odometry.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
         odometry.resetPosAndIMU();
         odometry.recalibrateIMU();
 
@@ -173,13 +174,15 @@ public class RobotHardware {
         if (!Double.isNaN(pos.getX(DistanceUnit.CM))) robotY = pos.getX(DistanceUnit.CM);
         if (!Double.isNaN(pos.getHeading(AngleUnit.DEGREES))) robotH = pos.getHeading(AngleUnit.DEGREES) + 90;
 
-        //telemetry.addData("X", robotX);
-        //telemetry.addData("Y", robotY);
-        //telemetry.addData("H", robotH);
+        telemetry.addData("X", robotX);
+        telemetry.addData("Y", robotY);
+        telemetry.addData("H", robotH);
 
-        //telemetry.update();
-        //dashboardTelemetry.update();
+        telemetry.addData("encoderX", odometry.getEncoderX());
+        telemetry.addData("encoderY", odometry.getEncoderY());
 
+        telemetry.update();
+        PanelTelemetry.update();
 
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();

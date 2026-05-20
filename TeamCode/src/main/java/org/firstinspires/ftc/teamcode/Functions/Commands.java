@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
+import org.firstinspires.ftc.teamcode.Functions.Detection;
 
 public class Commands {
     private RobotHardware robot;
@@ -41,7 +42,7 @@ public class Commands {
         else if(gamepad.left_trigger > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
         else intake.setState(Intake.StateIntake.INIT);
 
-        if(robot.isStable() && turret.isStable()) detection.startDectection();
+        if(robot.isStable() && turret.isStable()) detection.initiateDetection();
 
         if(gamepad.right_bumper) transfer.setState(Transfer.StateTransfer.INIT);
 

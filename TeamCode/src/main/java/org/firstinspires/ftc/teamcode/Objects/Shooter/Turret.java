@@ -55,10 +55,20 @@ public class Turret {
         currentPosition = motor.getCurrentPosition();
         currentSpeed = motor.getVelocity();
 
+        /*if(currentPosition > 180 * K) {
+            currentPosition = currentPosition - 360 * K;
+            targetPosition = targetPosition - 360 * K;
+        }
+
+        else if (currentPosition < -180*K) {
+            currentPosition = currentPosition + 360 * K;
+            targetPosition = targetPosition + 360 * K;
+        }*/
+
         error = targetPosition - currentPosition;
 
-        if (error > 180 * K) error = error - 360 * K;
-        if (error < -180 * K) error = error + 360 * K;
+        /*if (error > 180 * K) error = error - 360 * K;
+        if (error < -180 * K) error = error + 360 * K;*/
 
         power = kp * error + (-currentSpeed) * kd;
 
@@ -67,16 +77,19 @@ public class Turret {
 
         if(useKs) power = power + Math.signum(error) * ks;
 
-
         power = clamp(power/battery, -1, 1);
         motor.setPower(power);
 
+        //motor.setPower(0);
+
         if(currentPosition != lastPosition) stabletimer.reset();
 
-        telemetry.addData("pozitie", motor.getCurrentPosition());
-        //telemetry.addData("power", power/battery);
+        lastPosition = currentPosition;
 
-        //telemetry.update();
+        telemetry.addData("turretAngle", getTurretAngle());
+        telemetry.addLine("");
+        telemetry.addData("current pos", currentPosition);
+
     }
 
     public void setTargetPosition(double targetPosition) {

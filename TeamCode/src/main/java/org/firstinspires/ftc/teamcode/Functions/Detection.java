@@ -8,38 +8,58 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
+import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
 
+@Configurable
 public class Detection {
-    public Camera camera;
-    public Turret turret;
+    private Camera camera;
+    private Turret turret;
 
-    public double cameraX, cameraY, cameraAngle;
-    public double goalXRobot, goalYRobot, goalYCamera, goalXCamera;
-    public double cameraDistance = 0, additionalValue = 0, additionalGoalHeight = 30;
-    public double additionalGoalX, additionalGoalY;
-    public double lastGoalX, lastGoalY, last_lastGoalX, last_lastGoalY;
-    public boolean started = false;
+    private boolean initiateDetection;
 
-    public Detection(AllObjects objects){
+    public static double cameraDistance = 15.5, additionalValue = 4.3, additionalGoalHeight = 30;
+    public static double additionalGoalX, additionalGoalY;
+    private double cameraAngle;
+    private double goalXCamera, goalYCamera, goalXRobot, goalYRobot;
+    private double lastGoalX, lastGoalY, last_lastGoalX, last_lastGoalY;
+
+    private ElapsedTime timer = new ElapsedTime();
+
+    public Detection (AllObjects objects) {
         camera = objects.camera;
         turret = objects.turret;
 
-
+        initiateDetection = false;
     }
 
-    public void update(){
-        if(started) {
-            started = false;
+    public void update() {
+        telemetry.addData("goalXRobot", goalXRobot);
+        telemetry.addData("goalYRobot", goalYRobot);
+        telemetry.addLine("");
+
+        if (initiateDetection) {
+            initiateDetection = false;
+
+            if (timer.seconds() < 0.5) return;
 
             camera.detectGoal();
 
-            if(!camera.detected()) return;
+            if (!camera.detected()) return;
 
-            cameraX = camera.getGoalX();
-            cameraY = camera.getGoalY();
+            if (camera.isDead()) {
+                goalX = last_lastGoalX;
+                goalY = last_lastGoalY;
+
+                return;
+            }
+
+            goalXCamera = camera.getGoalX();
+            goalYCamera = camera.getGoalY();
 
             cameraAngle = turret.getTurretAngle() + 270;
 
@@ -56,17 +76,19 @@ public class Detection {
             last_lastGoalX = lastGoalX; last_lastGoalY = lastGoalY;
             lastGoalX = goalX; lastGoalY = goalY;
 
-            telemetry.addData("Searching", started);
-            telemetry.addData("X", goalX);
-            telemetry.addData("Y", goalY);
 
+            timer.reset();
         }
     }
-    public void startDectection(){
-        started = true;
+
+    public void initiateDetection() {
+        initiateDetection = true;
     }
 
-    public void setOffsets(double ad){
-
+    public void setGoalOffsets(double additionalGoalX, double additionalGoalY) {
+        this.additionalGoalX = additionalGoalX;
+        this.additionalGoalY = additionalGoalY;
     }
+
+
 }

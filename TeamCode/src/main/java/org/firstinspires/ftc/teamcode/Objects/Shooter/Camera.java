@@ -1,32 +1,32 @@
 package org.firstinspires.ftc.teamcode.Objects.Shooter;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.*;
 
-import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
-@Configurable
-public class Camera {
+public class Camera{
     private Limelight3A limelight;
 
     public static double cameraAngle = 0;
 
-    private boolean detected;
+    private boolean activated, detected;
 
-    private double x = 0, y = 0, z = 0, lastX, lastY, lastZ;
+    private double x = 0, y = 0, z = 0, lastX, lastY, lastZ, last_lastX, last_lastY, last_lastZ;
 
     private Pose3D position;
 
     private int ID;
 
-    private boolean trackingGoal = false;
-    private boolean stopped = false;
+    private boolean trackingMotif = false;
+    private boolean dead = false;
 
     public Camera(RobotHardware robot) {
         limelight = robot.limelight;
@@ -34,11 +34,11 @@ public class Camera {
         searchGoal();
 
         limelight.start();
-        stopped = false;
+        activated = false;
     }
 
     public void detectGoal() {
-        telemetry.addData("Am intrat in detection", 0);
+        if (trackingMotif) return;
 
         detected = false;
 
@@ -57,10 +57,10 @@ public class Camera {
                 x = x * 100; y = y * 100; z = z * 100;
 
                 if (x == lastX && y == lastY && z == lastZ) {
-                    stopped = true;
+                    dead = true;
                 }
                 else {
-                    stopped = false;
+                    dead = false;
                 }
 
                 lastX = x; lastY = y; lastZ = z;
@@ -70,6 +70,7 @@ public class Camera {
     }
 
     public void update() {
+        if (trackingMotif) {
             LLResult result = limelight.getLatestResult();
 
             if (result != null && result.isValid()) {
@@ -78,26 +79,34 @@ public class Camera {
                     ID = fr.getFiducialId();
                 }
             }
+        }
+
         telemetry.addData("ID", ID);
+        telemetry.addData("detected", detected);
+
+        telemetry.addData("camreaX", x);
+        telemetry.addData("cameraY", y);
+        telemetry.addData("cameraZ", z);
+
+        telemetry.addLine("");
 
     }
+
     public void searchForMotif() {
-        trackingGoal = true;
+        trackingMotif = true;
 
         limelight.pipelineSwitch(2);
     }
 
     public void searchGoal() {
-        trackingGoal = false;
+        trackingMotif = false;
 
-        if (alliance == -1)
-            limelight.pipelineSwitch(1);
-        else
-            limelight.pipelineSwitch(0);
+        if (alliance == -1) limelight.pipelineSwitch(1);
+        else limelight.pipelineSwitch(0);
     }
 
     public boolean isTrackingMotif() {
-        return (trackingGoal);
+        return (trackingMotif);
     }
 
     public int getID() {
@@ -122,13 +131,22 @@ public class Camera {
         return detected;
     }
     public boolean isDead() {
-        return stopped;
+        return dead;
     }
 
     public void start() {
-        stopped = true;
+        //limelight.start();
+        activated = true;
     }
     public void stop() {
-        stopped = false;
+        //limelight.stop();
+        activated = false;
+    }
+
+    public void resetDetection() {
+        x = 0; y = 0; z = 0;
+        lastX = 0; lastY = 0; lastZ = 0;
+        last_lastX = 0; last_lastY = 0; last_lastZ = 0;
+        goalX = 0; goalY = 0;
     }
 }

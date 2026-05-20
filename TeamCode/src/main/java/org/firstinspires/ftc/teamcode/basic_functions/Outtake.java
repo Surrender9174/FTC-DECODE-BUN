@@ -25,7 +25,9 @@ public class Outtake{
     private Hood hood;
     private Camera camera;
     private Spindexer spindexer;
-    private Trapa ramp;
+    private Trapa trapa;
+
+    private double constant_hood;
 
     private double turretAngle, cameraAngle, absoluteAngle;
 
@@ -40,41 +42,47 @@ public class Outtake{
 
     private ElapsedTime timer = new ElapsedTime();
 
-    public Outtake(Turret turret, Shoot shooter, Hood hood, Spindexer spindexer, Trapa ramp, Camera camera) {
+    public Outtake(Turret turret, Shoot shooter, Hood hood, Spindexer spindexer, Trapa trapa, Camera camera) {
         this.turret = turret;
         this.shooter = shooter;
         this.hood = hood;
         this.spindexer = spindexer;
-        this.ramp = ramp;
+        this.trapa = trapa;
         this.camera = camera;
     }
 
     public void update() {
         if (goalX == 0 && goalY == 0)
             return;
+
         goalDistance = Math.sqrt((Math.pow(goalX - robotX, 2) + Math.pow(goalY - robotY, 2)));
         goalAngle = Math.toDegrees(Math.atan2(goalY - robotY, goalX - robotX));
-        imaginaryDistance = robotVelocity * getTime(goalDistance);
-        imaginaryX = goalX + Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
-        imaginaryY = goalY + Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
-        goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
-        goalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
+
+        //imaginaryDistance = robotVelocity * getTime(goalDistance);
+        //imaginaryX = goalX + Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
+        //imaginaryY = goalY + Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
+
+        //goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
+
+       //GoalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
+
         turretAngle = goalAngle - robotH + 180;
 
         if (turretAngle > 180) turretAngle = turretAngle - 360;
         if (turretAngle < -180) turretAngle = turretAngle + 360;
 
-        turretAngle = clamp(turretAngle, -170, 160);
+       // turretAngle = clamp(turretAngle, -160, 160);
 
         if (goalX != 0 && goalY != 0) {
-            if (!camera.isTrackingMotif())
+            if (camera.isTrackingMotif() == false)
                 turret.setTargetPosition(turretAngle);
-            if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance));
-            else shooter.setTargetSpeed(2050);
+            //if (transferMode) //shooter.setTargetSpeed(getShooterSpeed(goalDistance));
+            //else //shooter.setTargetSpeed(2050);
 
-            hood.setPosition(getAngle(goalDistance) - shooter.speedDifference() * KangleAdjustment);
-
+            //hood.setPosition(getShooterSpeed(goalDistance));
         }
+
+        telemetry.addData("Turret", turretAngle);
 
         telemetry.addData("Goal X", goalX);
         telemetry.addData("Goal Y", goalY);

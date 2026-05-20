@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Objects.Indexer;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.PanelTelemetry;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.panel;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import android.sax.StartElementListener;
@@ -10,6 +12,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import static androidx.core.math.MathUtils.clamp;
 
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
@@ -19,24 +22,32 @@ public class Spindexer {
     private DcMotor encoder;
     private AnalogInput position;
     private ElapsedTime timer = new ElapsedTime();
-    private static double kp = -0.0026, kd = -0.00028, ks = -0.15;
+//CU /BATTERY    private static double kp = -0.00247, kd = -0.0003, ks = -0.12;
+    private static double kp = -0.00017, kd = -0.0000128, ks = -0.0152;
     private double error, currentSpeed, power;
     private double currentPosition, lastPosition;
-
     private double initPosAnalog = 150;
     private double initPosEncoder, offset;
     public static double K = 22.7555555555556;
     private double targetPosition = 0;
-    public static final double POS_INTAKE = 5*K, POS_CHAMBERFRONT = -45*K, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
-    public boolean UseKs, FirstFrame, shooting = false;
+    private double transferSpeed = -14;
+    private double batterySpin;
+    public static double POS_INTAKE = 5*K, POS_CHAMBERFRONT = -1120, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public boolean UseKs, FirstFrame, shooting = false, freeSpin, resetBaterry = true;
     public enum StateSpindexer{
         CHAMBERFRONT,
         INTAKE,
         CHAMBERLEFT,
         CHAMBERRIGHT,
+        AFTERTRASNFER,
         SHOOTING;
     }
+    public enum StateTrans{
+        FIRST,
+        RESET;
+    }
     private StateSpindexer state, laststate;
+    private StateSpindexer stateTrans;
 
     public Spindexer(RobotHardware robot){
         servospin1 = robot.servoSpindexer1;
@@ -53,6 +64,8 @@ public class Spindexer {
         UseKs = false;
 
         FirstFrame = true;
+        freeSpin = false;
+        resetBaterry = true;
         setSpeed(0);
 
         //initPosEncoder = (position.getVoltage() / 3.214 * 360) % 180 * 2;
@@ -71,18 +84,26 @@ public class Spindexer {
             switch (state){
                 case INTAKE:
                     targetPosition = POS_INTAKE;
+                    shooting = false;
+                    resetBaterry = false;
 
                     break;
                 case CHAMBERFRONT:
                     targetPosition = POS_CHAMBERFRONT;
+                    shooting = false;
+                    resetBaterry = true;
 
                     break;
                 case CHAMBERLEFT:
                     targetPosition = POS_CHAMBERLEFT;
+                    shooting = false;
+                    resetBaterry = true;
 
                     break;
                 case CHAMBERRIGHT:
                     targetPosition = POS_CHAMBERRIGHT;
+                    shooting = false;
+                    resetBaterry = true;
 
                     break;
                 case SHOOTING:
@@ -93,6 +114,7 @@ public class Spindexer {
 
         }
         laststate = state;
+
 
         currentPosition = (encoder.getCurrentPosition() + offset) % 8192;
 
@@ -110,27 +132,34 @@ public class Spindexer {
 
         currentSpeed = (currentPosition - lastPosition) / timer.seconds();
 
-        if(Math.abs(error) >= 3*K) UseKs = true;
+        if(Math.abs(error) >= 2*K) UseKs = true;
         else if (Math.abs(error) <= 1*K) UseKs = false;
 
         power = kp * error + kd * (-currentSpeed);
 
         if(UseKs) power = power + Math.signum(error) * ks;
 
-        if(shooting)
-            power = -14;
+        if(shooting) power = transferSpeed;
 
-        setSpeed(power/battery);
+        if(resetBaterry) batterySpin = battery;
 
+        //power = power / batterySpin;
 
-        telemetry.addData("Power", power);
-        telemetry.addData("Error", error);
-        telemetry.addData("CurrentSpeed", currentSpeed);
+        power = clamp(power, -1, 1);
+
+        if(!freeSpin){
+            setSpeed(power);
+        }
 
         lastPosition = currentPosition;
         timer.reset();
 
-        telemetry.addData("CurrentPosition", (currentPosition));
+
+        telemetry.addData("Power", power);
+        telemetry.addData("TransferPower", transferSpeed);
+
+        PanelTelemetry.addData("SpinPos" , currentPosition);
+        PanelTelemetry.addData("TargetPos", targetPosition);
     }
     public void setSpeed(double power){
         servospin1.setPower(power);
@@ -141,7 +170,7 @@ public class Spindexer {
         this.state = state;
     }
 
-    public void disableShooting(){
-        shooting = false;
+    public void setTransferSpeed(double x){
+        transferSpeed = x;
     }
 }

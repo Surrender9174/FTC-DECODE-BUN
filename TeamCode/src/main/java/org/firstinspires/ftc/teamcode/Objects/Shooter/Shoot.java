@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Objects.Shooter;
 
 import static com.pedropathing.math.MathFunctions.clamp;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.PanelTelemetry;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -17,9 +18,10 @@ public class Shoot {
     public DcMotorEx motor_w_encoder;
     public DcMotorEx motor_wtht_encoder;
 
-    private double Kp = 0.033, Ks = 0.0051;
-    private double error, power, currentSpeed, targetSpeed;
-    private static double maxVelocity = 2100;
+    private static double Kp = 0.035, Ks = 0.0053;
+    private double error, power, currentSpeed;
+    public static double targetSpeed = 0;
+    private double maxVelocity = 2100;
     private boolean useKs;
 
     public Shoot(RobotHardware robot){
@@ -27,7 +29,7 @@ public class Shoot {
         motor_wtht_encoder = robot.motorShooter6;
 
         motor_w_encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor_w_encoder.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor_w_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_w_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor_w_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -44,6 +46,9 @@ public class Shoot {
         if (currentSpeed - targetSpeed >= 80 && power >= 0) power = -0.01;
 
         setPowers(power);
+
+        PanelTelemetry.addData("Velocity", power);
+        PanelTelemetry.addData("Current Speed", currentSpeed);
     }
 
     private void setPowers(double power){
@@ -51,11 +56,11 @@ public class Shoot {
         motor_w_encoder.setPower(power);
     }
 
-    public void setTargetSpeed(double targetSpeed){
-        this.targetSpeed = targetSpeed;
-    }
+    //public void setTargetSpeed(double targetSpeed){
+    //    this.targetSpeed = targetSpeed;
+    //}
 
-    public double speedDifference(){
-        return targetSpeed - currentSpeed;
-    }
+    //public double speedDifference(){
+    //    return targetSpeed - currentSpeed;
+    //}
 }

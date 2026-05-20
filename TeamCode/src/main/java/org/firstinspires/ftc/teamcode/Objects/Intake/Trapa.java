@@ -40,9 +40,6 @@ public class Trapa {
             }
         }
         laststate = state;
-
-
-        telemetry.addData("pos", servoTrapa.getPosition());
     }
 
     public void setState(StateTrapa state) {

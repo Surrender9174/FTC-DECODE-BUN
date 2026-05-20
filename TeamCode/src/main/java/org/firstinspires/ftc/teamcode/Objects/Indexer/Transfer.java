@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
 
 import java.util.concurrent.TimeUnit;
@@ -12,6 +13,7 @@ public class Transfer {
     public Spindexer spindexer;
     public Trapa trapa;
 
+    public ActiveIntake activeIntake;
     public ElapsedTime timer = new ElapsedTime();
 
     public enum StateTransfer{
@@ -23,9 +25,10 @@ public class Transfer {
 
     private StateTransfer state, laststate;
     private boolean moving = false;
-    public Transfer(Spindexer spindexer, Trapa trapa){
+    public Transfer(Spindexer spindexer, Trapa trapa, ActiveIntake activeIntake){
         this.spindexer = spindexer;
         this.trapa = trapa;
+        this.activeIntake = activeIntake;
 
         state = StateTransfer.IDLE;
     }
@@ -35,8 +38,10 @@ public class Transfer {
                 case IDLE:
                     break;
                 case INIT:
+                    spindexer.setTransferSpeed(-14);
                     spindexer.setState(Spindexer.StateSpindexer.SHOOTING);
                     trapa.setState(Trapa.StateTrapa.OUTTAKE);
+                    activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
 
                     timer.reset();
                     state = StateTransfer.MOVE;
@@ -44,23 +49,19 @@ public class Transfer {
                     break;
                 case MOVE:
                     //spindexer.setSpeed(-1);
-                    if(timer.seconds() > 1.2){
-                        spindexer.disableShooting();
-                        if(timer.milliseconds() > 1600)
-                            state = StateTransfer.FINISH;
-                    }
+                    if(timer.seconds() < 0.9) break;
+                    state = StateTransfer.FINISH;
+
                     break;
                 case FINISH:
-                    spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
+                    //spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
+                    spindexer.setTransferSpeed(0);
+
+                    activeIntake.setState(ActiveIntake.ActiveIntakeStates.INIT);
 
                     state = StateTransfer.IDLE;
                     break;
             }
-
-
-        telemetry.addData("Timer", timer.seconds());
-        telemetry.addData("State", state);
-        telemetry.addData("LastState", laststate);
 
     }
     public void setState(StateTransfer state){

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 //import com.acmerobotics.dashboard.FtcDashboard;
+import com.bylazar.panels.Panels;
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -22,6 +24,9 @@ public abstract class StaticVariables {
     public static int pattern;
     public static boolean detect;
 
+    public static Panels panel = Panels.INSTANCE;
+    private static PanelsTelemetry panelsTelemetry = PanelsTelemetry.INSTANCE;
+    public static Telemetry PanelTelemetry = panelsTelemetry.getFtcTelemetry();
     //public static FtcDashboard dashboard = FtcDashboard.getInstance();
     //public static Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
