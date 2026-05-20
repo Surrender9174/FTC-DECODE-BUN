@@ -26,13 +26,13 @@ public class Spindexer {
     private static double kp = -0.00017, kd = -0.0000128, ks = -0.0152;
     private double error, currentSpeed, power;
     private double currentPosition, lastPosition;
-    private double initPosAnalog = 150;
+    public static double initPosAnalog = 170;
     private double initPosEncoder, offset;
     public static double K = 22.7555555555556;
     private double targetPosition = 0;
     private double transferSpeed = -14;
     private double batterySpin;
-    public static double POS_INTAKE = 5*K, POS_CHAMBERFRONT = -1120, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public static double POS_INTAKE = 0, POS_CHAMBERFRONT = -1120, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
     public boolean UseKs, FirstFrame, shooting = false, freeSpin, resetBaterry = true;
     public enum StateSpindexer{
         CHAMBERFRONT,

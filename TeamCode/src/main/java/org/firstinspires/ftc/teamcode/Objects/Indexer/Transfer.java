@@ -38,7 +38,7 @@ public class Transfer {
                 case IDLE:
                     break;
                 case INIT:
-                    spindexer.setTransferSpeed(-14);
+                    spindexer.setTransferSpeed(-1);
                     spindexer.setState(Spindexer.StateSpindexer.SHOOTING);
                     trapa.setState(Trapa.StateTrapa.OUTTAKE);
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);

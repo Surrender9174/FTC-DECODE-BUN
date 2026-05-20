@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.PanelTelemetr
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.PanelsTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -18,8 +19,8 @@ public class Shoot {
     public DcMotorEx motor_w_encoder;
     public DcMotorEx motor_wtht_encoder;
 
-    private static double Kp = 0.035, Ks = 0.0053;
-    private double error, power, currentSpeed;
+    private static double Kp = 0.06, Kv = 0.0057;
+    private double error, power, currentSpeed, lastSpeed, lastPower;
     public static double targetSpeed = 0;
     private double maxVelocity = 2100;
     private boolean useKs;
@@ -30,25 +31,38 @@ public class Shoot {
 
         motor_w_encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor_w_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor_w_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor_w_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor_w_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motor_wtht_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_wtht_encoder.setDirection(DcMotorSimple.Direction.FORWARD);
-        motor_wtht_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor_wtht_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        lastSpeed = 0;
     }
 
     public void update(){
         currentSpeed = motor_w_encoder.getVelocity();
+
+        //currentSpeed = 0.8 * lastSpeed + 0.2 * currentSpeed;
+
         error = targetSpeed - currentSpeed;
-        power = Kp * error + Ks * targetSpeed;
+
+        power = Kp * error + Kv * targetSpeed;
+
         power = clamp(power / battery, -1, 1);
+
         if (currentSpeed - targetSpeed >= 80 && power >= 0) power = -0.01;
 
-        setPowers(power);
+        if (Math.abs(power - lastPower) > 0.02)
+            setPowers(power);
 
-        PanelTelemetry.addData("Velocity", power);
-        PanelTelemetry.addData("Current Speed", currentSpeed);
+        lastPower = power;
+        //lastSpeed = currentSpeed;
+
+        PanelTelemetry.addData("ShooterPower", power);
+        PanelTelemetry.addData("CurrentVelocity", currentSpeed);
+        PanelTelemetry.addData("TargetVelocity", targetSpeed);
     }
 
     private void setPowers(double power){
@@ -56,11 +70,13 @@ public class Shoot {
         motor_w_encoder.setPower(power);
     }
 
-    //public void setTargetSpeed(double targetSpeed){
-    //    this.targetSpeed = targetSpeed;
-    //}
+    public void setTargetSpeed(double targetSpeed){
+        targetSpeed = clamp(targetSpeed, 0, maxVelocity);
 
-    //public double speedDifference(){
-    //    return targetSpeed - currentSpeed;
-    //}
+        this.targetSpeed = targetSpeed;
+    }
+
+    public double getSpeedDifference(){
+        return targetSpeed - currentSpeed;
+    }
 }

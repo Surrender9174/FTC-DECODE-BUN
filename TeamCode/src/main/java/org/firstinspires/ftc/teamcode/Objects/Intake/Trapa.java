@@ -22,14 +22,12 @@ public class Trapa {
         servoTrapa = robot.servoTrapa;
 
         state = StateTrapa.INTAKE;
-
     }
 
     public void update() {
         if (state != laststate) {
             switch (state) {
                 case INIT:
-
                     break;
                 case INTAKE:
                     servoTrapa.setPosition(POS_INTAKE);
@@ -39,6 +37,7 @@ public class Trapa {
                     break;
             }
         }
+
         laststate = state;
     }
 

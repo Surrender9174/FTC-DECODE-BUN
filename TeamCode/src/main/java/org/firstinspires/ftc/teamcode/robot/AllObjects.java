@@ -55,7 +55,6 @@ public class AllObjects {
 
         turret.update();
         shoot.update();
-        hood.update();
         intake.update();
         transfer.update();
         outtake.update();

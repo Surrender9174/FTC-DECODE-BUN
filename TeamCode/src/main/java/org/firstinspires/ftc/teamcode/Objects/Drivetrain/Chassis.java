@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.Objects.Drivetrain;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 
 public class Chassis {
-    private DcMotor motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight;
+    private DcMotorEx motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight;
 
     private double vx, vy, w;
     private double fr, fl, bl, br;
@@ -55,6 +60,11 @@ public class Chassis {
         motorFrontRight.setPower(fr);
         motorBackLeft.setPower(bl);
         motorBackRight.setPower(br);
+
+        telemetry.addData("motorFrontLeft", motorFrontLeft.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("motorFrontRight", motorFrontRight.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("motorBackLeft", motorBackLeft.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("motorBackRight", motorBackRight.getCurrent(CurrentUnit.MILLIAMPS));
     }
 
     public void updateRobotCentric() {

@@ -46,7 +46,7 @@ public class RobotHardware {
 
     public DigitalChannel pressurePlate;
 
-    public DcMotor motorFrontRight, motorFrontLeft,motorBackRight, motorBackLeft;
+    public DcMotorEx motorFrontRight, motorFrontLeft,motorBackRight, motorBackLeft;
     public DcMotor motorIntake;
     public DcMotorEx motorShooter5, motorShooter6, motorTurret;
 
@@ -79,10 +79,10 @@ public class RobotHardware {
         controlHub = hardwareMap.get(LynxModule.class, "Control Hub");
 
         //CHASSIS
-        motorFrontRight = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        motorFrontLeft = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        motorBackRight = hardwareMap.get(DcMotor.class, "motorBackRight");
-        motorBackLeft = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        motorFrontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        motorFrontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        motorBackRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+        motorBackLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
 
 //        imu = hardwareMap.get(IMU.class, "imu");
 //
@@ -136,12 +136,10 @@ public class RobotHardware {
     }
 
     public void update() {
-        //telemetry.addData("Baterie", battery);
-
         lastgamepad.copy(gamepad);
         lastgamepad2.copy(gamepad2);
 
-        //telemetry.addData("FPS", lastCnt);
+        telemetry.addData("FPS", lastCnt);
 
         if (timer.seconds() > 1) {
             lastCnt = cnt;
@@ -178,8 +176,10 @@ public class RobotHardware {
         telemetry.addData("Y", robotY);
         telemetry.addData("H", robotH);
 
-        telemetry.addData("encoderX", odometry.getEncoderX());
-        telemetry.addData("encoderY", odometry.getEncoderY());
+        telemetry.addData("Battery", battery);
+
+//        telemetry.addData("encoderX", odometry.getEncoderX());
+//        telemetry.addData("encoderY", odometry.getEncoderY());
 
         telemetry.update();
         PanelTelemetry.update();

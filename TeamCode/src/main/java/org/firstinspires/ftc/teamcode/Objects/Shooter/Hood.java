@@ -15,15 +15,11 @@ public class Hood {
 
     public Hood(RobotHardware robot){
         servoHood = robot.servoHood;
-        servoHood.setPosition(position);
+        servoHood.setPosition(lowerLimit);
     }
 
-    public void update(){
-        position = clamp(position, lowerLimit, upperLimit);
-        servoHood.setPosition(position);
-    }
-
-   public void setPosition(double position){
-        this.position = position;
+   public void setPosition(double position) {
+        this.position = clamp(position, lowerLimit, upperLimit);
+        servoHood.setPosition(this.position);
    }
 }

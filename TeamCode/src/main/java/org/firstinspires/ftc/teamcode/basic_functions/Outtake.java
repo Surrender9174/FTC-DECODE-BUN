@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Objects.Shooter.Hood;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 
+@Configurable
 public class Outtake{
     private Turret turret;
     private Shoot shooter;
@@ -31,7 +33,7 @@ public class Outtake{
 
     private double turretAngle, cameraAngle, absoluteAngle;
 
-    public static double shooterSpeed = 0, anglePosition = 0.09;
+    public static double shooterSpeed = 0, anglePosition = 0.13;
     public static double KangleAdjustment = 0;
 
     private double goalAngle, goalDistance;
@@ -74,12 +76,15 @@ public class Outtake{
        // turretAngle = clamp(turretAngle, -160, 160);
 
         if (goalX != 0 && goalY != 0) {
-            if (camera.isTrackingMotif() == false)
+            if (!camera.isTrackingMotif())
                 turret.setTargetPosition(turretAngle);
             //if (transferMode) //shooter.setTargetSpeed(getShooterSpeed(goalDistance));
             //else //shooter.setTargetSpeed(2050);
 
             //hood.setPosition(getShooterSpeed(goalDistance));
+
+            shooter.setTargetSpeed(shooterSpeed);
+            hood.setPosition(anglePosition - KangleAdjustment * shooter.getSpeedDifference());
         }
 
         telemetry.addData("Turret", turretAngle);

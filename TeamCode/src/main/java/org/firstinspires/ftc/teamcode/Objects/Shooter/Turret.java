@@ -52,6 +52,7 @@ public class Turret {
             motor.setPower(power);
             return;
         }
+
         currentPosition = motor.getCurrentPosition();
         currentSpeed = motor.getVelocity();
 
@@ -66,9 +67,6 @@ public class Turret {
         }*/
 
         error = targetPosition - currentPosition;
-
-        /*if (error > 180 * K) error = error - 360 * K;
-        if (error < -180 * K) error = error + 360 * K;*/
 
         power = kp * error + (-currentSpeed) * kd;
 

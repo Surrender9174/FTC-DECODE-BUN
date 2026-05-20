@@ -24,6 +24,7 @@ public class BlueTeleOP extends OpMode {
         robot.init();
 
         objects = new AllObjects();
+        objects.init_camera(robot);
     }
     @Override
     public void start(){
