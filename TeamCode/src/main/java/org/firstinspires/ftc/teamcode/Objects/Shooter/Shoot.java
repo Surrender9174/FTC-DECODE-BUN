@@ -19,7 +19,7 @@ public class Shoot {
     public DcMotorEx motor_w_encoder;
     public DcMotorEx motor_wtht_encoder;
 
-    private static double Kp = 0.06, Kv = 0.0057;
+    private static double Kp = 0.08, Kv = 0.0057;
     private double error, power, currentSpeed, lastSpeed, lastPower;
     public static double targetSpeed = 0;
     private double maxVelocity = 2100;
