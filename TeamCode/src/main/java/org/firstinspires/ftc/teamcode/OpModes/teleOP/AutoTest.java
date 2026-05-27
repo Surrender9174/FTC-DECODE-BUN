@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.pathConstrai
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
@@ -29,6 +30,8 @@ public class AutoTest extends OpMode {
     public RobotHardware robot;
     public AllObjects objects;
 
+
+    public Transfer transfer;
     public int step;
 
     public Pose startPose = new Pose(0, 0, 90);
@@ -54,12 +57,16 @@ public class AutoTest extends OpMode {
     }
 
     public void buildPath(){
-        scorePath = new Path(new BezierCurve(startPose, pivot, scorePose));
+        scorePath = new Path(new BezierLine(startPose, scorePose));
+
+        scorePath.setTangentHeadingInterpolation();
         step = 0;
     }
 
     public void start(){
         objects.init(robot);
+
+        transfer = objects.transfer;
     }
 
     public void loop(){
@@ -77,7 +84,7 @@ public class AutoTest extends OpMode {
                 break;
             case 1:
                 if(!follower.isBusy()){
-                    objects.transfer.setState(Transfer.StateTransfer.INIT);
+                    transfer.setState(Transfer.StateTransfer.INIT);
                     step = 2;
                 }
                 break;
