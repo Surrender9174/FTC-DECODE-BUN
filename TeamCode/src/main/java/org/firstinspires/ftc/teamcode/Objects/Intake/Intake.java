@@ -10,6 +10,7 @@ public class Intake {
     public ActiveIntake activeIntake;
     public Trapa trapa;
     public Spindexer spindexer;
+    public ServoIntake servoIntake;
 
     public enum StateIntake{
         INIT,
@@ -18,10 +19,11 @@ public class Intake {
     }
 
     public StateIntake state, laststate;
-    public Intake(ActiveIntake activeIntake, Trapa trapa, Spindexer spindexer){
+    public Intake(ActiveIntake activeIntake, Trapa trapa, Spindexer spindexer, ServoIntake servoIntake){
         this.activeIntake = activeIntake;
         this.trapa = trapa;
         this.spindexer = spindexer;
+        this.servoIntake = servoIntake;
 
         state = StateIntake.INIT;
     }
@@ -31,6 +33,7 @@ public class Intake {
                 case INIT:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.INIT);
                     trapa.setState(Trapa.StateTrapa.OUTTAKE);
+                    servoIntake.setState(ServoIntake.StariServoIntake.OUTTAKE);
 
                     spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
 
@@ -38,6 +41,7 @@ public class Intake {
                 case INTAKE:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
                     trapa.setState(Trapa.StateTrapa.INTAKE);
+                    servoIntake.setState(ServoIntake.StariServoIntake.INTAKE);
 
                     spindexer.setState(Spindexer.StateSpindexer.INTAKE);
 
@@ -45,6 +49,7 @@ public class Intake {
                 case OUTTAKE:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.OUTTAKE);
                     trapa.setState(Trapa.StateTrapa.INTAKE);
+                    servoIntake.setState(ServoIntake.StariServoIntake.OUTTAKE);
 
                     spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
                     break;

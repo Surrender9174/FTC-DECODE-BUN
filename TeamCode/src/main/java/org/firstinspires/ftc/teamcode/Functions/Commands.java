@@ -44,7 +44,7 @@ public class Commands {
 
         if(robot.isStable() && turret.isStable()) detection.initiateDetection();
 
-        if(gamepad.right_bumper) transfer.setState(Transfer.StateTransfer.INIT);
+        if(gamepad.right_bumper/* && transfer.CasianSafeProff()*/) transfer.setState(Transfer.StateTransfer.INIT);
 
         if(gamepad.options && !lastgamepad.options){
             robot.odometry.resetPosAndIMU();

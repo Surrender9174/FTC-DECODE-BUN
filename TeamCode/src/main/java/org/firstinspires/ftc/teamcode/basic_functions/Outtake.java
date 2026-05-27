@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.basic_functions;
 
 import static androidx.core.math.MathUtils.clamp;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.PanelTelemetry;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
@@ -34,9 +35,9 @@ public class Outtake{
     private double turretAngle, cameraAngle, absoluteAngle;
 
     public static double shooterSpeed = 0, anglePosition = 0.13;
-    public static double KangleAdjustment = 0;
+    public static double KangleAdjustment = 0.0002;
 
-    private double goalAngle, goalDistance;
+    private double goalAngle, goalDistance, GoalAngle;
 
     private double imaginaryX, imaginaryY, imaginaryDistance;
 
@@ -64,9 +65,9 @@ public class Outtake{
         //imaginaryX = goalX + Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
         //imaginaryY = goalY + Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
 
-        //goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
+//       goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
 
-       //GoalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
+//       goalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
 
         turretAngle = goalAngle - robotH + 180;
 
@@ -83,6 +84,8 @@ public class Outtake{
 
             //hood.setPosition(getShooterSpeed(goalDistance));
 
+            //shooter.setTargetSpeed(getShooterSpeed((goalDistance + shooterSpeed)));
+            //hood.setPosition(getAngle(goalDistance) - KangleAdjustment * shooter.getSpeedDifference());
             shooter.setTargetSpeed(shooterSpeed);
             hood.setPosition(anglePosition - KangleAdjustment * shooter.getSpeedDifference());
         }
@@ -95,16 +98,22 @@ public class Outtake{
 
         telemetry.addData("Goal Distance", goalDistance);
         telemetry.addLine("");
+
+        PanelTelemetry.addData("HoodPos", anglePosition - KangleAdjustment * shooter.getSpeedDifference());
     }
 
     private double getShooterSpeed(double x) {
-        return 0;
+        //return  -0.0000000450807 * Math.pow(x, 4) + 0.0000507672 * Math.pow(x, 3) - 0.0175723 * Math.pow(x, 2) + 3.69218 * x + 631.2981;
+        return  0.00000016247 * Math.pow(x, 4) - 0.000138795 * Math.pow(x, 3) + 0.0439438 * Math.pow(x, 2) - 4.69289 * x + 1036.88407;
+        //return 0;
     }
     private double getAngle(double x) {
-        return 0;
+        //return 0.0000000000562995  * Math.pow(x, 4) - 0.0000000254431 * Math.pow(x, 3) - 0.00000666642 * Math.pow(x, 2) + 0.00631291 * x - 0.507917;
+        return 0.000000000612797  * Math.pow(x, 4) - 0.000000558712 * Math.pow(x, 3) + 0.000179347 * Math.pow(x, 2) - 0.021535 * x + 0.970312;
+        //return 0;
     }
     private double getTime(double x) {
-        return 0.9;
+        return 0.5;
     }
     public void initiateTransfer() {
         transferMode = true;

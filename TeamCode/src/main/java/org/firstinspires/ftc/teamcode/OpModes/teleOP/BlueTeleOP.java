@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes.teleOP;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,10 +10,14 @@ import org.firstinspires.ftc.teamcode.robot.AllObjects;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 import org.firstinspires.ftc.teamcode.robot.StaticVariables;
 import org.firstinspires.ftc.teamcode.Functions.Commands;
+
+@Configurable
 @TeleOp(name = "BlueTeleOP")
 public class BlueTeleOP extends OpMode {
     private RobotHardware robot;
     private AllObjects objects;
+
+    private static double addX = -10, addY = -25;
 
     private  Commands commands;
     @Override
@@ -34,6 +39,7 @@ public class BlueTeleOP extends OpMode {
         commands.init(objects, robot);
 
         //commands.detection.setCoeffs(5, 15);
+        commands.detection.setGoalOffsets(addX, addY);
     }
     @Override
     public void loop() {

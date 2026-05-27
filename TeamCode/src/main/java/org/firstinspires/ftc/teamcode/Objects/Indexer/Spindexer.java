@@ -23,7 +23,8 @@ public class Spindexer {
     private AnalogInput position;
     private ElapsedTime timer = new ElapsedTime();
 //CU /BATTERY    private static double kp = -0.00247, kd = -0.0003, ks = -0.12;
-    private static double kp = -0.00017, kd = -0.0000128, ks = -0.0152;
+    private static double kp = -0.00017, kd = -0.0000128, ks = -0.0152, addp = -0.00021, addd = -0.0000188, adds = 0;
+    public static double CasianSafe = 200;
     private double error, currentSpeed, power;
     private double currentPosition, lastPosition;
     public static double initPosAnalog = 165;
@@ -86,12 +87,18 @@ public class Spindexer {
                     targetPosition = POS_INTAKE;
                     shooting = false;
                     resetBaterry = false;
+                    kp = -0.00021;
+                    ks = -0.011;
+                    kd = -0.000012;
 
                     break;
                 case CHAMBERFRONT:
                     targetPosition = POS_CHAMBERFRONT;
                     shooting = false;
                     resetBaterry = true;
+                    kp = addp;
+                    kd = addd;
+                    ks = adds;
 
                     break;
                 case CHAMBERLEFT:
@@ -141,7 +148,7 @@ public class Spindexer {
 
         if(shooting) power = transferSpeed;
 
-        if(resetBaterry) batterySpin = battery;
+        //if(resetBaterry) batterySpin = battery;
 
         //power = power / batterySpin;
 
@@ -160,6 +167,8 @@ public class Spindexer {
 
         PanelTelemetry.addData("SpinPos" , currentPosition);
         PanelTelemetry.addData("TargetPos", targetPosition);
+        PanelTelemetry.addData("CurrentSpeed", currentSpeed);
+        PanelTelemetry.addData("Error", error);
     }
     public void setSpeed(double power){
         servospin1.setPower(power);
@@ -173,4 +182,9 @@ public class Spindexer {
     public void setTransferSpeed(double x){
         transferSpeed = x;
     }
+
+    /*public boolean SafeForCasian(){
+        if(state == StateSpindexer.CHAMBERFRONT && error < CasianSafe) return true;
+        return false;
+    }*/
 }

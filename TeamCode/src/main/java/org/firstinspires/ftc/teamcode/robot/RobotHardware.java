@@ -50,7 +50,7 @@ public class RobotHardware {
     public DcMotor motorIntake;
     public DcMotorEx motorShooter5, motorShooter6, motorTurret;
 
-    public Servo servoHood, servoTrapa;
+    public Servo servoHood, servoTrapa, servoIntake;
     public CRServo servoSpindexer1, servoSpindexer2;
     public AnalogInput spindexerPosition;
 
@@ -108,6 +108,8 @@ public class RobotHardware {
 
         //INTAKE
         motorIntake = hardwareMap.get(DcMotor.class, "motorIntake");
+
+        servoIntake = hardwareMap.get(Servo.class, "servoIntake");
 
         pressurePlate = hardwareMap.get(DigitalChannel.class, "pressurePlate");
 
