@@ -10,20 +10,18 @@ import org.firstinspires.ftc.teamcode.robot.AllObjects;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 import org.firstinspires.ftc.teamcode.robot.StaticVariables;
 import org.firstinspires.ftc.teamcode.Functions.Commands;
-
+@TeleOp
 @Configurable
-@TeleOp(name = "BlueTeleOP")
-public class BlueTeleOP extends OpMode {
+public class Expert extends OpMode {
     private RobotHardware robot;
     private AllObjects objects;
 
-    private static double addX = 15, addY = -20;
-
     private  Commands commands;
+    public static double addX = -10, addY = 15;
     @Override
     public void init() {
         StaticVariables.init(hardwareMap, telemetry, gamepad1, gamepad2);
-        alliance = 1;
+        alliance = -1;
 
         robot = new RobotHardware();
         robot.init();
@@ -43,8 +41,9 @@ public class BlueTeleOP extends OpMode {
     }
     @Override
     public void loop() {
-        robot.update();
-        objects.update();
         commands.update();
+        objects.update();
+        robot.update();
+
     }
 }
