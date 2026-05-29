@@ -55,12 +55,12 @@ public class Spindexer {
         servospin2 = robot.servoSpindexer2;
 
         position = robot.spindexerPosition;
-        encoder = robot.motorShooter6;
+        encoder = robot.motorShooter5;
 
         encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        state = StateSpindexer.INTAKE;
+        state = StateSpindexer.CHAMBERFRONT;
         targetPosition = POS_INTAKE;
         UseKs = false;
 
@@ -123,7 +123,7 @@ public class Spindexer {
         laststate = state;
 
 
-        currentPosition = (encoder.getCurrentPosition() + offset) % 8192;
+        currentPosition = (-encoder.getCurrentPosition() + offset) % 8192;
 
         error =  targetPosition - currentPosition;
 

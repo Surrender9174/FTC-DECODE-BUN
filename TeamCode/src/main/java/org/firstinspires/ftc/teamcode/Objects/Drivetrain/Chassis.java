@@ -14,7 +14,7 @@ public class Chassis {
     private DcMotorEx motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight;
 
     private double vx, vy, w;
-    private double fr, fl, bl, br;
+    private double fr, fl, bl, br, lastFr, lastFl, lastBl, lastBr;
     private double power, theta, sin, cos;
     private double maxx;
 
@@ -51,15 +51,13 @@ public class Chassis {
             bl /= maxx; br /= maxx;
         }
 
-//        if (maxx > 0.6) {
-//            fr = fr / maxx * 0.6; fl = fl / maxx * 0.6;
-//            bl = bl / maxx * 0.6; br = br / maxx * 0.6;
-//        }
+        if (fl != lastFl) motorFrontLeft.setPower(fl);
+        if (fr != lastFr) motorFrontRight.setPower(fr);
+        if (bl != lastBl) motorBackLeft.setPower(bl);
+        if (br != lastBr) motorBackRight.setPower(br);
 
-        motorFrontLeft.setPower(fl);
-        motorFrontRight.setPower(fr);
-        motorBackLeft.setPower(bl);
-        motorBackRight.setPower(br);
+        lastFl = fl; lastFr = fr;
+        lastBl = bl; lastBr = br;
 
         telemetry.addData("motorFrontLeft", motorFrontLeft.getCurrent(CurrentUnit.MILLIAMPS));
         telemetry.addData("motorFrontRight", motorFrontRight.getCurrent(CurrentUnit.MILLIAMPS));

@@ -17,7 +17,7 @@ public class RedTeleOP extends OpMode {
     private AllObjects objects;
 
     private  Commands commands;
-    public static double addX = -12, addY = 25;
+    public static double addX = -15, addY = 20;
     @Override
     public void init() {
         StaticVariables.init(hardwareMap, telemetry, gamepad1, gamepad2);

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import org.firstinspires.ftc.teamcode.Functions.Detection;
 import org.firstinspires.ftc.teamcode.Objects.Drivetrain.Chassis;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Transfer;
@@ -21,9 +22,9 @@ public class AllObjects {
     public Chassis chassis;
     public Turret turret;
     public Camera camera;
-    private Shoot shoot;
-    private Hood hood;
-    private Spindexer spindexer;
+    public Shoot shoot;
+    public Hood hood;
+    public Spindexer spindexer;
     private Outtake outtake;
 
     public Transfer transfer;
@@ -44,13 +45,12 @@ public class AllObjects {
         hood = new Hood(robot);
 
         intake = new Intake(activeIntake, trapa, spindexer, servoIntake);
-        transfer = new Transfer(spindexer, trapa, activeIntake);
-        outtake = new Outtake(turret, shoot, hood, spindexer, trapa, camera);
+        outtake = new Outtake(turret, shoot, hood, camera);
+        transfer = new Transfer(spindexer, trapa, activeIntake, outtake, shoot);
     }
 
     public void update() {
         chassis.updateFieldCentric();
-        //intake.update();
         activeIntake.update();
         servoIntake.update();
 
@@ -63,5 +63,20 @@ public class AllObjects {
         transfer.update();
         outtake.update();
         camera.update();
+    }
+
+    public void update2(){
+        activeIntake.update();
+        servoIntake.update();
+
+        trapa.update();
+        spindexer.update();
+
+        turret.update();
+        shoot.update();
+        //intake.update();
+        //transfer.update();
+        camera.update();
+        outtake.update();
     }
 }

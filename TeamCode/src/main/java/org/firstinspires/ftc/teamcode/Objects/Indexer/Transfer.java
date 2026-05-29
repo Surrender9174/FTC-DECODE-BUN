@@ -7,14 +7,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
+import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
 
 import java.util.concurrent.TimeUnit;
 
 public class Transfer {
     public Spindexer spindexer;
     public Trapa trapa;
-
+    private Shoot shooter;
     public ActiveIntake activeIntake;
+
+    public Outtake outtake;
     public ElapsedTime timer = new ElapsedTime();
 
     private double speed = -12;
@@ -28,10 +32,12 @@ public class Transfer {
 
     private StateTransfer state, laststate;
     private boolean moving = false;
-    public Transfer(Spindexer spindexer, Trapa trapa, ActiveIntake activeIntake){
+    public Transfer(Spindexer spindexer, Trapa trapa, ActiveIntake activeIntake, Outtake outtake, Shoot shooter){
         this.spindexer = spindexer;
         this.trapa = trapa;
         this.activeIntake = activeIntake;
+        this.outtake = outtake;
+        this.shooter = shooter;
 
         state = StateTransfer.IDLE;
     }
@@ -41,7 +47,11 @@ public class Transfer {
                 case IDLE:
                     break;
                 case INIT:
-                    spindexer.setTransferSpeed(speed / battery);
+                    outtake.initiateTransfer();
+
+                    if (Math.abs(shooter.getSpeedDifference()) > 20) break;
+
+                    spindexer.setTransferSpeed(-1);
                     spindexer.setState(Spindexer.StateSpindexer.SHOOTING);
                     trapa.setState(Trapa.StateTrapa.OUTTAKE);
                     //activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
@@ -52,14 +62,14 @@ public class Transfer {
                     break;
                 case MOVE:
                     //spindexer.setSpeed(-1);
-                    if(timer.seconds() < 0.8) break;
+                    if(timer.seconds() < 0.5) break;
                     state = StateTransfer.FINISH;
 
                     break;
                 case FINISH:
                     //spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
                     spindexer.setTransferSpeed(0);
-
+                    outtake.endTransfer();
                     //activeIntake.setState(ActiveIntake.ActiveIntakeStates.INIT);
 
                     state = StateTransfer.IDLE;

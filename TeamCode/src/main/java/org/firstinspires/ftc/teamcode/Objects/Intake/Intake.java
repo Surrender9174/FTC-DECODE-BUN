@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Objects.Intake;
 
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
+
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
@@ -27,6 +29,7 @@ public class Intake {
 
         state = StateIntake.INIT;
     }
+
     public void update(){
         if(state != laststate){
             switch (state){
@@ -56,10 +59,14 @@ public class Intake {
             }
         }
 
+        telemetry.addData("Entered", 1);
         laststate = state;
     }
 
     public void setState(StateIntake state) {
         this.state = state;
+    }
+    public StateIntake getState(){
+        return state;
     }
 }

@@ -16,8 +16,8 @@ public class ActiveIntake {
 
     private ActiveIntakeStates state, lastState;
 
-    private final double INTAKE_POWER = 0.85;
-    private final double OUTTAKE_POWER = -0.85;
+    private final double INTAKE_POWER = 1;
+    private final double OUTTAKE_POWER = -1;
 
     public ActiveIntake(RobotHardware robot) {
         motor = robot.motorIntake;

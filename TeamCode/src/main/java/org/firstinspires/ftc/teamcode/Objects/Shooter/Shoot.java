@@ -19,30 +19,33 @@ public class Shoot {
     public DcMotorEx motor_w_encoder;
     public DcMotorEx motor_wtht_encoder;
 
-    private static double Kp = 0.08, Kv = 0.0057;
+    private static double Kp = 0.06, Kv = 0.006;
     private double error, power, currentSpeed, lastSpeed, lastPower;
     public static double targetSpeed = 0;
-    private double maxVelocity = 2100;
+    private double maxVelocity = 1500;
     private boolean useKs;
 
     public Shoot(RobotHardware robot){
-        motor_w_encoder = robot.motorShooter5;
-        motor_wtht_encoder = robot.motorShooter6;
+        motor_w_encoder = robot.motorShooter6;
+        motor_wtht_encoder = robot.motorShooter5;
 
         motor_w_encoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor_w_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor_w_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor_w_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor_w_encoder.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motor_wtht_encoder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor_wtht_encoder.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor_wtht_encoder.setDirection(DcMotorSimple.Direction.REVERSE);
         motor_wtht_encoder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         lastSpeed = 0;
+        targetSpeed = 0;
     }
 
     public void update(){
         currentSpeed = motor_w_encoder.getVelocity();
+
+        if (currentSpeed - lastSpeed > 100 && currentSpeed > targetSpeed) currentSpeed = lastSpeed;
 
         //currentSpeed = 0.8 * lastSpeed + 0.2 * currentSpeed;
 
@@ -58,7 +61,7 @@ public class Shoot {
             setPowers(power);
 
         lastPower = power;
-        //lastSpeed = currentSpeed;
+        lastSpeed = currentSpeed;
 
         PanelTelemetry.addData("ShooterPower", power);
         PanelTelemetry.addData("CurrentVelocity", currentSpeed);

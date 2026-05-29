@@ -15,6 +15,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
+import org.firstinspires.ftc.teamcode.Objects.Indexer.Transfer;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
 import org.firstinspires.ftc.teamcode.Objects.Shooter.Hood;
@@ -27,15 +28,13 @@ public class Outtake{
     private Shoot shooter;
     private Hood hood;
     private Camera camera;
-    private Spindexer spindexer;
-    private Trapa trapa;
-
+    private Transfer transfer;
     private double constant_hood;
 
     private double turretAngle, cameraAngle, absoluteAngle;
 
-    public static double shooterSpeed = 0, anglePosition = 0.13;
-    public static double KangleAdjustment = 0.0002;
+    public static double shooterSpeed = 0, anglePosition = 0.11;
+    public static double KangleAdjustment = 0;
 
     private double goalAngle, goalDistance, GoalAngle;
 
@@ -45,12 +44,10 @@ public class Outtake{
 
     private ElapsedTime timer = new ElapsedTime();
 
-    public Outtake(Turret turret, Shoot shooter, Hood hood, Spindexer spindexer, Trapa trapa, Camera camera) {
+    public Outtake(Turret turret, Shoot shooter, Hood hood, Camera camera) {
         this.turret = turret;
         this.shooter = shooter;
         this.hood = hood;
-        this.spindexer = spindexer;
-        this.trapa = trapa;
         this.camera = camera;
     }
 
@@ -79,15 +76,13 @@ public class Outtake{
         if (goalX != 0 && goalY != 0) {
             if (!camera.isTrackingMotif())
                 turret.setTargetPosition(turretAngle);
-            //if (transferMode) //shooter.setTargetSpeed(getShooterSpeed(goalDistance));
-            //else //shooter.setTargetSpeed(2050);
+            if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance));
+            else shooter.setTargetSpeed(1400);
 
-            //hood.setPosition(getShooterSpeed(goalDistance));
-
-            //shooter.setTargetSpeed(getShooterSpeed((goalDistance + shooterSpeed)));
-            //hood.setPosition(getAngle(goalDistance) - KangleAdjustment * shooter.getSpeedDifference());
-            shooter.setTargetSpeed(shooterSpeed);
-            hood.setPosition(anglePosition - KangleAdjustment * shooter.getSpeedDifference());
+            //shooter.setTargetSpeed(getShooterSpeed((goalDistance)));
+            hood.setPosition(getAngle(goalDistance) - KangleAdjustment * shooter.getSpeedDifference());
+            //shooter.setTargetSpeed(shooterSpeed);
+            //hood.setPosition(anglePosition - KangleAdjustment * shooter.getSpeedDifference());
         }
 
         telemetry.addData("Turret", turretAngle);
@@ -103,14 +98,10 @@ public class Outtake{
     }
 
     private double getShooterSpeed(double x) {
-        //return  -0.0000000450807 * Math.pow(x, 4) + 0.0000507672 * Math.pow(x, 3) - 0.0175723 * Math.pow(x, 2) + 3.69218 * x + 631.2981;
-        return  0.00000016247 * Math.pow(x, 4) - 0.000138795 * Math.pow(x, 3) + 0.0439438 * Math.pow(x, 2) - 4.69289 * x + 1036.88407;
-        //return 0;
+        return 0.0000000731412 * Math.pow(x, 4) - 0.0000893328 * Math.pow(x, 3) + 0.0399948 * Math.pow(x, 2) - 5.92603 * x + 1154.75858;
     }
     private double getAngle(double x) {
-        //return 0.0000000000562995  * Math.pow(x, 4) - 0.0000000254431 * Math.pow(x, 3) - 0.00000666642 * Math.pow(x, 2) + 0.00631291 * x - 0.507917;
-        return 0.000000000612797  * Math.pow(x, 4) - 0.000000558712 * Math.pow(x, 3) + 0.000179347 * Math.pow(x, 2) - 0.021535 * x + 0.970312;
-        //return 0;
+        return 0.00000000198847 * Math.pow(x, 4) - 0.00000230068 * Math.pow(x, 3)  + 0.00095348 * Math.pow(x, 2) - 0.163724 * x + 9.97497;
     }
     private double getTime(double x) {
         return 0.5;
