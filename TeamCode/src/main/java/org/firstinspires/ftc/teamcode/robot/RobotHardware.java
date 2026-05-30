@@ -54,7 +54,7 @@ public class RobotHardware {
     public CRServo servoSpindexer1, servoSpindexer2;
     public AnalogInput spindexerPosition;
 
-    public RevColorSensorV3 sensorChamberFront1, sensorChamberFront2, sensorChamberRight1, sensorChamberRight2, sensorChamberLeft1, sensorChamberLeft2;
+   // public RevColorSensorV3 sensorChamberFront1, sensorChamberFront2, sensorChamberRight1, sensorChamberRight2, sensorChamberLeft1, sensorChamberLeft2;
     public IMU imu;
     public GoBildaPinpointDriver odometry;
     private Pose2D pos;
@@ -118,13 +118,13 @@ public class RobotHardware {
         servoSpindexer2 = hardwareMap.get(CRServo.class, "servoSpindexer2");
         servoTrapa = hardwareMap.get(Servo.class, "servoTrapa");
 
-        sensorChamberFront1 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberFront1");
+        /*sensorChamberFront1 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberFront1");
         sensorChamberFront2 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberFront2");
         sensorChamberRight1 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberRight1");
         sensorChamberRight2 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberRight2");
         sensorChamberLeft1 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberLeft1");
         sensorChamberLeft2 = hardwareMap.get(RevColorSensorV3.class, "sensorChamberLeft2");
-
+*/
         spindexerPosition = hardwareMap.get(AnalogInput.class, "1");
 
         //OUTTAKE

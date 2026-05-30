@@ -17,7 +17,7 @@ public class BlueTeleOP extends OpMode {
     private RobotHardware robot;
     private AllObjects objects;
 
-    private static double addX = 15, addY = -20;
+    private static double addX = 10, addY = 20;
 
     private  Commands commands;
     @Override
@@ -40,11 +40,12 @@ public class BlueTeleOP extends OpMode {
 
         //commands.detection.setCoeffs(5, 15);
         commands.detection.setGoalOffsets(addX, addY);
+
     }
     @Override
     public void loop() {
-        robot.update();
-        objects.update();
         commands.update();
+        objects.update();
+        robot.update();
     }
 }

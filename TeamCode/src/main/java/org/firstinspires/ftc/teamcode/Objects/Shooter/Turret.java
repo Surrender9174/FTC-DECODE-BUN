@@ -22,14 +22,14 @@ public class Turret {
 
     public ElapsedTime stabletimer = new ElapsedTime();
 
-    private boolean usePIDF, useKs;
+    private boolean usePIDF = true, useKs;
 
     private double K = 4.166666666667;
 
     private double currentPosition, lastPosition, error;
     private double currentSpeed;
     private double power;
-    private static double targetPosition = 0;
+    private double targetPosition = 0;
 
 
     public Turret(RobotHardware robot){
@@ -93,6 +93,9 @@ public class Turret {
     public void setTargetPosition(double targetPosition) {
         this.targetPosition = targetPosition * K;
     }
+    public void setPower(double x){
+        power = x;
+    }
 
     public double getTurretAngle() {
         return (currentPosition / K);
@@ -100,5 +103,11 @@ public class Turret {
 
     public boolean isStable(){
         return (stabletimer.seconds() > 0.3);
+    }
+    public void dontUsePID(){
+        usePIDF = false;
+    }
+    public void useUsePID(){
+        usePIDF = true;
     }
 }

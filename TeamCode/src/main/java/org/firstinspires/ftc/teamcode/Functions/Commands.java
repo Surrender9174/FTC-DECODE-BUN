@@ -28,6 +28,7 @@ public class Commands {
 
 
     public void init(AllObjects objects, RobotHardware robot){
+        camera = objects.camera;
         chassis = objects.chassis;
         intake = objects.intake;
         transfer = objects.transfer;
@@ -44,12 +45,43 @@ public class Commands {
 
         if(robot.isStable() && turret.isStable()) detection.initiateDetection();
 
+        if(gamepad.square) transfer.setState(Transfer.StateTransfer.BACK);
+
         if(gamepad.right_bumper/* && transfer.CasianSafeProff()*/) transfer.setState(Transfer.StateTransfer.INIT);
 
         if(gamepad.options && !lastgamepad.options){
             robot.odometry.resetPosAndIMU();
+
+            camera.resetDetection();
+
+            turret.setTargetPosition(0);
+
         }
 
+        if(gamepad.triangle && !lastgamepad.triangle){
+            turret.dontUsePID();
+        }
+       /* else if(!gamepad.triangle && lastgamepad.triangle){
+            turret.useUsePID();
+        }*/
+
+        if (gamepad.dpad_left && !lastgamepad.dpad_left) {
+            turret.setPower(0.15);
+        }
+
+        if (!gamepad.dpad_left && lastgamepad.dpad_left) {
+            turret.setPower(0);
+        }
+
+        if (gamepad.dpad_right && !lastgamepad.dpad_right) {
+            turret.setPower(-0.15);
+        }
+
+        if (!gamepad.dpad_right && lastgamepad.dpad_right) {
+            turret.setPower(0);
+        }
+
+        turret.update();
         detection.update();
         transfer.update();
     }

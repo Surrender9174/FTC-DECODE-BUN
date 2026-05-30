@@ -33,8 +33,8 @@ public class Outtake{
 
     private double turretAngle, cameraAngle, absoluteAngle;
 
-    public static double shooterSpeed = 0, anglePosition = 0.11;
-    public static double KangleAdjustment = 0;
+    public static double shooterSpeed = 20, anglePosition = 0.11;
+    public static double KangleAdjustment = 0.001;
 
     private double goalAngle, goalDistance, GoalAngle;
 
@@ -42,6 +42,8 @@ public class Outtake{
 
     private boolean transferMode = false;
 
+    private boolean automodeRed = false;
+    private boolean automodeBlue = false;
     private ElapsedTime timer = new ElapsedTime();
 
     public Outtake(Turret turret, Shoot shooter, Hood hood, Camera camera) {
@@ -58,15 +60,18 @@ public class Outtake{
         goalDistance = Math.sqrt((Math.pow(goalX - robotX, 2) + Math.pow(goalY - robotY, 2)));
         goalAngle = Math.toDegrees(Math.atan2(goalY - robotY, goalX - robotX));
 
-        //imaginaryDistance = robotVelocity * getTime(goalDistance);
-        //imaginaryX = goalX + Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
-        //imaginaryY = goalY + Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
+        imaginaryDistance = robotVelocity * getTime(goalDistance);
+        imaginaryX = goalX + Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
+        imaginaryY = goalY + Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
 
-//       goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
+       goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
 
-//       goalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
+       goalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
 
         turretAngle = goalAngle - robotH + 180;
+
+        if(automodeRed) turretAngle += 90;
+        if(automodeBlue) turretAngle -= 90;
 
         if (turretAngle > 180) turretAngle = turretAngle - 360;
         if (turretAngle < -180) turretAngle = turretAngle + 360;
@@ -76,10 +81,9 @@ public class Outtake{
         if (goalX != 0 && goalY != 0) {
             if (!camera.isTrackingMotif())
                 turret.setTargetPosition(turretAngle);
-            if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance));
+            if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance) + shooterSpeed);
             else shooter.setTargetSpeed(1400);
 
-            //shooter.setTargetSpeed(getShooterSpeed((goalDistance)));
             hood.setPosition(getAngle(goalDistance) - KangleAdjustment * shooter.getSpeedDifference());
             //shooter.setTargetSpeed(shooterSpeed);
             //hood.setPosition(anglePosition - KangleAdjustment * shooter.getSpeedDifference());
@@ -104,12 +108,19 @@ public class Outtake{
         return 0.00000000198847 * Math.pow(x, 4) - 0.00000230068 * Math.pow(x, 3)  + 0.00095348 * Math.pow(x, 2) - 0.163724 * x + 9.97497;
     }
     private double getTime(double x) {
-        return 0.5;
+        return 0.95;
     }
     public void initiateTransfer() {
         transferMode = true;
     }
     public void endTransfer() {
         transferMode = false;
+    }
+    public void initautoRed(){
+        automodeRed = true;
+    }
+    public void initautoBlue(){ automodeBlue = true;}
+    public void setShooterSpeed(double x){
+        shooterSpeed = x;
     }
 }

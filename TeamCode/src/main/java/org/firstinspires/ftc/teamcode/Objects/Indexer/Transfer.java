@@ -25,6 +25,7 @@ public class Transfer {
 
     public enum StateTransfer{
         IDLE,
+        BACK,
         INIT,
         MOVE,
         FINISH;
@@ -45,15 +46,21 @@ public class Transfer {
     public void update(){
             switch (state){
                 case IDLE:
+                    timer.reset();
+                    break;
+                case BACK:
+                    spindexer.setSpeed(1);
+                    state = StateTransfer.MOVE;
+
                     break;
                 case INIT:
                     outtake.initiateTransfer();
 
                     if (Math.abs(shooter.getSpeedDifference()) > 20) break;
 
+                    trapa.setState(Trapa.StateTrapa.OUTTAKE);
                     spindexer.setTransferSpeed(-1);
                     spindexer.setState(Spindexer.StateSpindexer.SHOOTING);
-                    trapa.setState(Trapa.StateTrapa.OUTTAKE);
                     //activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
 
                     timer.reset();
@@ -62,7 +69,7 @@ public class Transfer {
                     break;
                 case MOVE:
                     //spindexer.setSpeed(-1);
-                    if(timer.seconds() < 0.5) break;
+                    if(timer.seconds() < 1) break;
                     state = StateTransfer.FINISH;
 
                     break;
@@ -85,4 +92,8 @@ public class Transfer {
         if(spindexer.SafeForCasian()) return true;
         return false;
     }*/
+    public boolean TransferFinished(){
+        if(state == StateTransfer.FINISH) return true;
+        else return false;
+    }
 }

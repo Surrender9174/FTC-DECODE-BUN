@@ -16,7 +16,7 @@ public class Trapa {
     }
 
     private StateTrapa state, laststate;
-    private static double POS_INTAKE = 0.48, POS_OUTTAKE = 0.78;
+    private static double POS_INTAKE = 0.54, POS_OUTTAKE = 0.75;
 
     public Trapa(RobotHardware robot) {
         servoTrapa = robot.servoTrapa;

@@ -35,6 +35,7 @@ public class Intake {
             switch (state){
                 case INIT:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.INIT);
+
                     trapa.setState(Trapa.StateTrapa.OUTTAKE);
                     servoIntake.setState(ServoIntake.StariServoIntake.OUTTAKE);
 
@@ -52,7 +53,7 @@ public class Intake {
                 case OUTTAKE:
                     activeIntake.setState(ActiveIntake.ActiveIntakeStates.OUTTAKE);
                     trapa.setState(Trapa.StateTrapa.INTAKE);
-                    servoIntake.setState(ServoIntake.StariServoIntake.OUTTAKE);
+                    servoIntake.setState(ServoIntake.StariServoIntake.INTAKE);
 
                     spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
                     break;

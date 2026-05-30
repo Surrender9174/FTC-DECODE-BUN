@@ -90,5 +90,4 @@ public class Detection {
         this.additionalGoalY = additionalGoalY;
     }
 
-
 }

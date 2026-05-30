@@ -33,7 +33,7 @@ public class Spindexer {
     private double targetPosition = 0;
     private double transferSpeed = -14;
     private double batterySpin;
-    public static double POS_INTAKE = 0, POS_CHAMBERFRONT = -1300, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public static double POS_INTAKE = 0, POS_CHAMBERFRONT = -1350, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
     public boolean UseKs, FirstFrame, shooting = false, freeSpin, resetBaterry = true;
     public enum StateSpindexer{
         CHAMBERFRONT,
