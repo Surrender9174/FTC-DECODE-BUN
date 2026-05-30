@@ -65,7 +65,7 @@ public class BlueFar extends OpMode {
 
     public Pose startPose = new Pose(0, 0 , Math.toRadians(90));
     //public Pose pivot = new Pose( -10, 8, 90);
-    public Pose scorePose = new Pose(48,  48, Math.toRadians(90));
+    public Pose scorePose = new Pose(0,  30, Math.toRadians(90));
     //public Pose pivotScorePose = new Pose(3, 20, Math.toRadians(90));
 
     public Pose spike2 = new Pose(30, 48, Math.toRadians(90));
@@ -147,7 +147,7 @@ public class BlueFar extends OpMode {
         backtointake.setConstantHeadingInterpolation(Math.toRadians(90));
         backtoshoot3.setConstantHeadingInterpolation(Math.toRadians(90));
         leave.setConstantHeadingInterpolation(Math.toRadians(90));
-        step = 0;
+        step = 1;
     }
 
     public void start(){

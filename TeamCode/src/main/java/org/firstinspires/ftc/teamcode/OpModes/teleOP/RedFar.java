@@ -73,14 +73,14 @@ public class RedFar extends OpMode {
 
     public Pose pivots2 = new Pose(-25, 18, Math.toRadians(90));
     public Pose pivots3 = new Pose(-10, 30, Math.toRadians(90));
-    public Pose leave1 = new Pose(0, 30, Math.toRadians(90));
+    public Pose leave1 = new Pose(-30, 0, Math.toRadians(90));
 
     //public Pose spike2 = new Pose(-85, 45, 90);
     //public Pose spike2control = new Pose(7, 80,90);
     //public Pose pivot = new Pose(0, 10, 90);
     //public Pose scorePose = new Pose(23, 8, 31);
 
-
+    public Path leaving;
     public Path scorePath;
     public Path backtoshoot;
     public Path intakespike2;
@@ -120,7 +120,7 @@ public class RedFar extends OpMode {
         follower.setStartingPose(startPose);
 
         //  objects.turret.setTargetPosition(90);// -110, 330;
-        goalX = -127; goalY = -280;
+        //goalX = -127; goalY = -280;
         robotH += 90;
         time1 = true;
         //objects.turret.setTargetPosition(-90);
@@ -131,6 +131,7 @@ public class RedFar extends OpMode {
     }
 
     public void buildPath() {
+
         scorePath = new Path(new BezierLine(startPose, scorePose));
         backtoshoot = new Path(new BezierLine(scorePose, startPose));
         intakespike2 = new Path(new BezierCurve(startPose, pivots2, spike2));
@@ -138,6 +139,8 @@ public class RedFar extends OpMode {
         backtointake = new Path(new BezierLine(backtoshootspike2, scorePose));
         backtoshoot3 = new Path(new BezierLine(scorePose, backtoshootspike2));
         leave = new Path(new BezierLine(backtoshootspike2, leave1));
+
+        leaving = new Path(new BezierLine(startPose, leave1));
 
         scorePath.setConstantHeadingInterpolation(Math.toRadians(90));
         backtoshoot.setConstantHeadingInterpolation(Math.toRadians(90));
@@ -186,28 +189,39 @@ public class RedFar extends OpMode {
     public void update() {
         switch (step) {
             case 0:
-                if (time1 && timer.seconds() > 1.5) {
-                    transfer.setState(Transfer.StateTransfer.INIT);
-                    time1 = false;
-                }
-                if (timer.seconds() > 3) {
-                    timer.reset();
-                    step = 1;
-                }
+                follower.followPath(leaving);
+                timer.reset();
+                step = 1;
                 break;
             case 1:
+                if(timer.seconds() > 1){
+                    follower.pausePathFollowing();
+
+                }
+            /*case 1:
                 intake.setState(Intake.StateIntake.INTAKE);
                 time1 = true;
                 if (timer.seconds() > 0.2) {
                     follower.followPath(scorePath);
                     timer.reset();
+                    time1 = true;
                     step = 2;
                 }
                 break;
             case 2:
-                intake.setState(Intake.StateIntake.OUTTAKE);
-                if(timer.seconds() > 0.5)
-                    intake.setState(Intake.StateIntake.INIT);
+                if(!follower.isBusy()){
+                    if(timer.seconds() > 3) {
+                        intake.setState(Intake.StateIntake.OUTTAKE);
+                        follower.followPath(leave);
+                        time1 = false;
+                    }
+                    if(!time1){
+                        timer.reset();
+                        step = 3;
+                    }
+                }
+                break;
+            case 3:
                 break;
                /* if(!follower.isBusy() || timer.seconds() > 3){
                     intake.setState(Intake.StateIntake.OUTTAKE);
