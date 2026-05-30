@@ -81,6 +81,10 @@ public class Transfer {
         this.state = state;
     }
 
+    public StateTransfer getState() {
+        return state;
+    }
+
     /*public boolean CasianSafeProff(){
         if(spindexer.SafeForCasian()) return true;
         return false;

@@ -1,29 +1,18 @@
-package org.firstinspires.ftc.teamcode.OpModes.teleOP;
+package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.createFollower;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.driveConstants;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.followerConstants;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.localizerConstants;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.pathConstraints;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
-import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
 
-import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.robocol.Command;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Functions.Commands;
 import org.firstinspires.ftc.teamcode.Functions.Detection;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
@@ -33,13 +22,12 @@ import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ServoIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
 import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 import org.firstinspires.ftc.teamcode.robot.StaticVariables;
 
 @Autonomous
-public class AutoFarBlue extends OpMode {
+public class AutoTest extends OpMode {
     public Follower follower;
     public RobotHardware robot;
     public AllObjects objects;
@@ -54,31 +42,25 @@ public class AutoFarBlue extends OpMode {
     public ServoIntake servoIntake;
     public Spindexer spindexer;
     public Trapa trapa;
-    private int step;
+    public int step;
     public boolean time1 = true;
 
     public ElapsedTime timer = new ElapsedTime();
-    public ElapsedTime timer2 = new ElapsedTime();
 
-    public double add90x = - 3.47, add90y = -4;
-
-    public Pose startPose = new Pose(0, 0 , 90);
-    //public Pose pivot = new Pose( -10, 8, 90);
-    public Pose scorePose = new Pose(-19,  40, 90);
-
-
-    //public Pose spike2 = new Pose(-85, 45, 90);
-    //public Pose spike2control = new Pose(7, 80,90);
+    public Pose startPose = new Pose(0, 0, 90);
+    public Pose pivot = new Pose(0, 40, 90);
+    public Pose scorePose = new Pose(9, 60, 90);
+    public Pose spike2 = new Pose(-85, 45, 90);
+    public Pose spike2control = new Pose(7, 80,90);
     //public Pose pivot = new Pose(0, 10, 90);
     //public Pose scorePose = new Pose(23, 8, 31);
 
 
     public Path scorePath;
-    public Path backtoshoot;
+    public Path pathSpike2;
 
-    @Override
     public void init(){
-        alliance = 1;
+        alliance = -1;
         StaticVariables.init(hardwareMap, telemetry, gamepad1, gamepad2);
 
         robot = new RobotHardware();
@@ -107,28 +89,19 @@ public class AutoFarBlue extends OpMode {
         follower = createFollower(hardwareMap);
         follower.setStartingPose(startPose);
 
-      //  objects.turret.setTargetPosition(90);
-
-        goalX = -253; goalY = 243;
-        time1 = true;
+        goalX = -75; goalY = 15;
 
         buildPath();
     }
+
     public void buildPath(){
-        scorePath = new Path(new BezierLine(startPose , scorePose));
-        backtoshoot = new Path(new BezierLine(scorePose, startPose));
-        //pathSpike2 = new Path(new BezierCurve(scorePose, spike2control, spike2));
+        scorePath = new Path(new BezierCurve(startPose, pivot , scorePose));
+        pathSpike2 = new Path(new BezierCurve(scorePose, spike2control, spike2));
 
-        scorePath.setConstantHeadingInterpolation(90);
-        //scorePath.setLinearHeadingInterpolation(robotH, robotH+90);
-        backtoshoot.setConstantHeadingInterpolation(90);
-        //pathSpike2.setTangentHeadingInterpolation();
+        //scorePath.setLinearHeadingInterpolation(90, 180);
+        scorePath.setTangentHeadingInterpolation();
+        pathSpike2.setTangentHeadingInterpolation();
         step = 0;
-    }
-
-    public void start(){
-        timer.reset();
-        timer2.reset();
     }
 
     public void loop(){
@@ -141,7 +114,6 @@ public class AutoFarBlue extends OpMode {
         telemetry.addData("GoalY", goalY);
         telemetry.addData("STATE", step);
         telemetry.addData("UnghiTurreta", objects.turret.getTurretAngle());
-        telemetry.addData("X Y Z", follower.getPose());
 
         transfer.update();
         intake.update();
@@ -154,59 +126,57 @@ public class AutoFarBlue extends OpMode {
     public void update(){
         switch (step){
             case 0:
-                if(timer.seconds() > 0.8){
-                    if(time1 && timer.seconds() > 0.3){
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-                        timer2.reset();
-                    }
-                    if(timer2.seconds() > 2.3) {
-                        step = 1;
-                    }
-                }
+                follower.followPath(scorePath);
+                spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
+                trapa.setState(Trapa.StateTrapa.OUTTAKE);
+                servoIntake.setState(ServoIntake.StariServoIntake.OUTTAKE);
+                step = 1;
                 break;
             case 1:
-                time1 = true;
-                intake.setState(Intake.StateIntake.INTAKE);
-                follower.followPath(scorePath);
-                step = 2;
-
-                break;
-            case 2:
                 if(!follower.isBusy()){
-                    if(timer.seconds() > 1){
-                        intake.setState(Intake.StateIntake.OUTTAKE);
-                        if(timer.seconds() > 1.2){
-                            step = 3;
-
-                        }
-                    }
-                }
-                else{
-                    timer.reset();
-                }
-                break;
-            case 3:
-                intake.setState(Intake.StateIntake.INIT);
-                follower.followPath(backtoshoot);
-                step = 4;
-                break;
-            case 4:
-                if(!follower.isBusy()){
-                    if(time1 && timer.seconds() > 0.2){
+                    if(time1) {
                         transfer.setState(Transfer.StateTransfer.INIT);
                         time1 = false;
                     }
-
-                    step = 5;
+                    if(timer.seconds() > 0.85) {
+                        spindexer.setState(Spindexer.StateSpindexer.INTAKE);
+                        servoIntake.setState(ServoIntake.StariServoIntake.INTAKE);
+                        //activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
+                        trapa.setState(Trapa.StateTrapa.INTAKE);
+                        step = 2;
+                    }
                 }
                 else{
                     timer.reset();
                 }
                 break;
-            case 5:
-
+            case 2:
+                activeIntake.setState(ActiveIntake.ActiveIntakeStates.INTAKE);
+                follower.followPath(pathSpike2);
+                timer.reset();
+                step = 3;
                 break;
+            case 3:
+                if(timer.seconds() > 1.65){
+                    activeIntake.setState(ActiveIntake.ActiveIntakeStates.INIT);
+                    spindexer.setState(Spindexer.StateSpindexer.CHAMBERFRONT);
+                    step = 4;
+                }
+                break;
+            case 4:
+                follower.followPath(scorePath);
+                //objects.trapa.setState(Trapa.StateTrapa.OUTTAKE);
+                step = 5;
+                break;
+            case 5:
+                if(!follower.isBusy()){
+                    transfer.setState(Transfer.StateTransfer.INIT);
+                    if(timer.seconds() > 0.75)
+                        step = 6;
+                }
+                else{
+                    timer.reset();
+                }
         }
     }
 }

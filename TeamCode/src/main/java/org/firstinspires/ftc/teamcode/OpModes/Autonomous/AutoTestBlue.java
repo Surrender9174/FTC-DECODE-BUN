@@ -1,29 +1,18 @@
-package org.firstinspires.ftc.teamcode.OpModes.teleOP;
+package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
 
 import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.createFollower;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.driveConstants;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.followerConstants;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.localizerConstants;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.pathConstraints;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.alliance;
-import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
 
-import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.robocol.Command;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.Functions.Commands;
 import org.firstinspires.ftc.teamcode.Functions.Detection;
 import org.firstinspires.ftc.teamcode.Objects.Indexer.Spindexer;
@@ -33,7 +22,6 @@ import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ServoIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
 import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
 import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 import org.firstinspires.ftc.teamcode.robot.StaticVariables;

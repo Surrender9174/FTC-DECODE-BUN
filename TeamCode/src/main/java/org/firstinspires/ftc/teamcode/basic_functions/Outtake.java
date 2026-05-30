@@ -41,6 +41,7 @@ public class Outtake{
     private double imaginaryX, imaginaryY, imaginaryDistance;
 
     private boolean transferMode = false;
+    private boolean resetTurret = false;
 
     private ElapsedTime timer = new ElapsedTime();
 
@@ -72,6 +73,7 @@ public class Outtake{
         if (turretAngle < -180) turretAngle = turretAngle + 360;
 
        // turretAngle = clamp(turretAngle, -160, 160);
+        if(resetTurret){ turretAngle = 0; }
 
         if (goalX != 0 && goalY != 0) {
             if (!camera.isTrackingMotif())
@@ -112,4 +114,5 @@ public class Outtake{
     public void endTransfer() {
         transferMode = false;
     }
+    public void resetTurret(){ resetTurret = true; }
 }

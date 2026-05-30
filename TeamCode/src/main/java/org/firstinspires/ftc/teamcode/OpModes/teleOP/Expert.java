@@ -16,7 +16,7 @@ public class Expert extends OpMode {
     private RobotHardware robot;
     private AllObjects objects;
 
-    private  Commands commands;
+    private Commands commands;
     public static double addX = -10, addY = 15;
     @Override
     public void init() {
