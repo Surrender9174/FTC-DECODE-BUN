@@ -121,11 +121,8 @@ public class BlueFar extends OpMode {
         follower.setStartingPose(startPose);
 
         //objects.turret.setTargetPosition(90);// -110, 330;
-        goalX = 290; goalY = 180;
         robotH += 90;
         time1 = true;
-
-        outtake.initautoBlue();
 
 
         buildPath();

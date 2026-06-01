@@ -63,9 +63,10 @@ public class RedFar extends OpMode {
 
     public double add90x = -3.47, add90y = -4;
 
+    public Pose robotpose = new Pose();
     public Pose startPose = new Pose(0, 0, Math.toRadians(90));
     //public Pose pivot = new Pose( -10, 8, 90);
-    public Pose scorePose = new Pose(-1.5, 39.3, Math.toRadians(90));
+    public Pose scorePose = new Pose(40, 1, Math.toRadians(0));
     //public Pose pivotScorePose = new Pose(3, 20, Math.toRadians(90));
 
     public Pose spike2 = new Pose(-30, 39.3, Math.toRadians(90));
@@ -118,13 +119,12 @@ public class RedFar extends OpMode {
 
         follower = createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+        follower.setHeading(Math.toRadians(90));
 
         //  objects.turret.setTargetPosition(90);// -110, 330;
-        //goalX = -127; goalY = -280;
-        robotH += 90;
+        goalX = -324.5; goalY = 146;
         time1 = true;
         //objects.turret.setTargetPosition(-90);
-        outtake.initautoRed();
 
 
         buildPath();
@@ -142,26 +142,26 @@ public class RedFar extends OpMode {
 
         leaving = new Path(new BezierLine(startPose, leave1));
 
-        scorePath.setConstantHeadingInterpolation(Math.toRadians(90));
-        backtoshoot.setConstantHeadingInterpolation(Math.toRadians(90));
+        scorePath.setConstantHeadingInterpolation(Math.toRadians(0));
+        backtoshoot.setConstantHeadingInterpolation(Math.toRadians(0));
         intakespike2.setTangentHeadingInterpolation();
         backtoshoot2.setTangentHeadingInterpolation();
         backtoshoot2.reverseHeadingInterpolation();
-        backtointake.setConstantHeadingInterpolation(Math.toRadians(90));
-        backtoshoot3.setConstantHeadingInterpolation(Math.toRadians(90));
-        leave.setConstantHeadingInterpolation(Math.toRadians(90));
+        backtointake.setConstantHeadingInterpolation(Math.toRadians(0));
+        backtoshoot3.setConstantHeadingInterpolation(Math.toRadians(0));
+        leave.setConstantHeadingInterpolation(Math.toRadians(0));
         step = 0;
     }
-
+    @Override
     public void start() {
         detection.setGoalOffsets(-15, 20);
         timer.reset();
         timer2.reset();
         totaltime.reset();
     }
-
+    @Override
     public void loop() {
-        if (totaltime.seconds() < 29) {
+        //if (totaltime.seconds() < 29) {
             update();
 
             follower.update();
@@ -178,256 +178,27 @@ public class RedFar extends OpMode {
             objects.update2();
             commands.update();
             robot.update();
-        } else {
-            objects.camera.resetDetection();
-            objects.turret.setTargetPosition(0);
-        }
+        //} else {
+        //    objects.camera.resetDetection();
+        //    objects.turret.setTargetPosition(0);
+        //}
 
         //detection.update();
     }
-
     public void update() {
-        switch (step) {
+        robotpose = follower.getPose();
+        telemetry.addData("XAUTO", robotpose.getX());
+        telemetry.addData("YAUTO", robotpose.getY());
+        telemetry.addData("HAUTO", robotpose.getHeading());
+        switch (step){
             case 0:
-                follower.followPath(leaving);
-                timer.reset();
+                if(objects.shoot.getSpeedDifference() > 20) break;
+                transfer.setState(Transfer.StateTransfer.INIT);
                 step = 1;
                 break;
             case 1:
-                if(timer.seconds() > 1){
-                    follower.pausePathFollowing();
-
-                }
-            /*case 1:
-                intake.setState(Intake.StateIntake.INTAKE);
-                time1 = true;
-                if (timer.seconds() > 0.2) {
-                    follower.followPath(scorePath);
-                    timer.reset();
-                    time1 = true;
-                    step = 2;
-                }
-                break;
-            case 2:
-                if(!follower.isBusy()){
-                    if(timer.seconds() > 3) {
-                        intake.setState(Intake.StateIntake.OUTTAKE);
-                        follower.followPath(leave);
-                        time1 = false;
-                    }
-                    if(!time1){
-                        timer.reset();
-                        step = 3;
-                    }
-                }
-                break;
-            case 3:
-                break;
-               /* if(!follower.isBusy() || timer.seconds() > 3){
-                    intake.setState(Intake.StateIntake.OUTTAKE);
-                    if(timer.seconds() > 3.3){
-                        intake.setState(Intake.StateIntake.INIT);
-                        timer.reset();
-                        step = 3;
-                    }
-                }
-                break;
-            case 3:
-                if(timer.seconds() > 0.3){
-                    follower.followPath(backtoshoot);
-                    timer.reset();
-                    step = 4;
-                }
-                break;
-            case 4:
-                if(!follower.isBusy() && timer.seconds() > 2){
-                    if(time1){
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-                    }
-                    if(timer.seconds() > 4){
-                        timer.reset();
-                        step = 5;
-                    }
-                }
-                break;
-            case 5:
-                intake.setState(Intake.StateIntake.INTAKE);
-                time1 = true;
-                if(timer.seconds() > 0.3){
-                    follower.followPath(intakespike2);
-                    timer.reset();
-                    step = 6;
-                }
-                break;
-            case 6:
-                if(!follower.isBusy() && timer.seconds() > 2.5){
-                    intake.setState(Intake.StateIntake.OUTTAKE);
-                    if(timer.seconds() > 2.8){
-                        intake.setState(Intake.StateIntake.INIT);
-                        timer.reset();
-                        step = 7;
-                    }
-                }
-                break;
-            case 7:
-                if(timer.seconds() > 0.3){
-                    follower.followPath(backtoshoot2);
-                    timer.reset();
-                    step = 8;
-                }
-            case 8:
-                if(!follower.isBusy() && timer.seconds() > 3){
-                    if(time1){
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-                    }
-                    if(timer.seconds() > 4){
-                        timer.reset();
-                        step = 9;
-                    }
-                }
-                break;
-            case 9:
-                if(timer.seconds() > 0.5){
-                    follower.followPath(backtointake);
-                    intake.setState(Intake.StateIntake.INTAKE);
-                    timer.reset();
-                    step = 10;
-                }
-                break;
-            case 10:
-                if(timer.seconds() > 1.5){
-                    intake.setState(Intake.StateIntake.OUTTAKE);
-                    follower.followPath(backtoshoot3);
-                    if(timer.seconds() > 2.0)
-                        intake.setState(Intake.StateIntake.INIT);
-                    timer.reset();
-                    time1 = true;
-                    step = 11;
-                }
-                break;
-            case 11:
-                if(!follower.isBusy() && timer.seconds() > 0.5){
-                    if(timer.seconds() > 1 && time1) {
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-                    }
-                    if(timer.seconds() > 3){
-                        timer.reset();
-                        step = 12;
-                    }
-                }
-                break;
-            case 12:
-                follower.followPath(leave);
-                if(!follower.isBusy()){
-                    step = 13;
-                }
-                break;
-            case 13:
-                objects.camera.resetDetection();
-                objects.turret.setTargetPosition(0);
                 break;
         }
-            /*case 0:
-                if(timer.seconds() > 1){
-                    if(time1){
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-                        //timer2.reset();
-                    }
-                    if(timer.seconds() > 4) {
-                        timer.reset();
-                        step = 1;
-                    }
-                }
-                break;
-            case 1:
-                time1 = true;
-                intake.setState(Intake.StateIntake.INTAKE);
-                if(timer.seconds() > 0.2){
-                    follower.followPath(scorePath);
-                    step = 2;
-                }
-                break;
-            case 2:
-                if(!follower.isBusy()){
-                    if(timer.seconds() > 1){
-                        intake.setState(Intake.StateIntake.OUTTAKE);
-                        if(timer.seconds() > 4){
-                            step = 3;
 
-                        }
-                    }
-                }
-                else{
-                    timer.reset();
-                }
-                break;
-            case 3:
-                intake.setState(Intake.StateIntake.INIT);
-                follower.followPath(backtoshoot);
-                step = 4;
-                timer.reset();
-                break;
-            case 4:
-                if(!follower.isBusy()){
-                    if(time1 && timer.seconds() > 0.9){
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-
-                    }
-                    if(timer.seconds() > 4){
-                        step = 5;
-                        timer.reset();
-                    }
-
-                }
-                else{
-                    timer.reset();
-                }
-
-                break;
-            case 5:
-                intake.setState(Intake.StateIntake.INTAKE);
-                time1 = true;
-                if (timer.seconds() > 0.2){
-                    follower.followPath(intakespike2);
-                    step = 6;
-                }
-                break;
-            case 6:
-                if(!follower.isBusy()){
-                    if(timer.seconds() > 1){
-                        intake.setState(Intake.StateIntake.OUTTAKE);
-                    }
-                    if(timer.seconds() > 1.2){
-                        timer.reset();
-                        step = 7;
-                    }
-                }
-                else{
-                    timer.reset();
-                }
-
-                break;
-            case 7:
-                intake.setState(Intake.StateIntake.INIT);
-                follower.followPath(backtoshoot2);
-                timer.reset();
-                step = 8;
-
-                break;
-            case 8:
-                if(!follower.isBusy()){
-                    if(time1 && timer.seconds() > 2){
-                        transfer.setState(Transfer.StateTransfer.INIT);
-                        time1 = false;
-                    }
-                }
-                break;
-        }*/
-        }
     }
 }

@@ -23,6 +23,8 @@ public class Transfer {
 
     private double speed = -12;
 
+    private boolean reverse=false;
+
     public enum StateTransfer{
         IDLE,
         BACK,
@@ -44,12 +46,14 @@ public class Transfer {
     }
 
     public void update(){
+        if(reverse){state = StateTransfer.BACK;}
             switch (state){
                 case IDLE:
                     timer.reset();
                     break;
                 case BACK:
                     spindexer.setSpeed(1);
+                    spindexer.setState(Spindexer.StateSpindexer.SHOOTING);
                     state = StateTransfer.MOVE;
 
                     break;
@@ -95,5 +99,9 @@ public class Transfer {
     public boolean TransferFinished(){
         if(state == StateTransfer.FINISH) return true;
         else return false;
+    }
+
+    public void switchReverse(){
+        reverse = !reverse;
     }
 }

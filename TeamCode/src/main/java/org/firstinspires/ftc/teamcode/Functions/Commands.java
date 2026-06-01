@@ -45,7 +45,7 @@ public class Commands {
 
         if(robot.isStable() && turret.isStable()) detection.initiateDetection();
 
-        if(gamepad.square) transfer.setState(Transfer.StateTransfer.BACK);
+        if(gamepad.square && !lastgamepad.square) transfer.switchReverse();
 
         if(gamepad.right_bumper/* && transfer.CasianSafeProff()*/) transfer.setState(Transfer.StateTransfer.INIT);
 
@@ -56,14 +56,12 @@ public class Commands {
 
             turret.setTargetPosition(0);
 
+            //turret.useUsePID();
         }
 
         if(gamepad.triangle && !lastgamepad.triangle){
             turret.dontUsePID();
         }
-       /* else if(!gamepad.triangle && lastgamepad.triangle){
-            turret.useUsePID();
-        }*/
 
         if (gamepad.dpad_left && !lastgamepad.dpad_left) {
             turret.setPower(0.15);

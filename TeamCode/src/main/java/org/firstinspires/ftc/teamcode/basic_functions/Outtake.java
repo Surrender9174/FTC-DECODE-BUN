@@ -41,9 +41,6 @@ public class Outtake{
     private double imaginaryX, imaginaryY, imaginaryDistance;
 
     private boolean transferMode = false;
-
-    private boolean automodeRed = false;
-    private boolean automodeBlue = false;
     private ElapsedTime timer = new ElapsedTime();
 
     public Outtake(Turret turret, Shoot shooter, Hood hood, Camera camera) {
@@ -69,9 +66,6 @@ public class Outtake{
        goalAngle = Math.toDegrees(Math.atan2(imaginaryY - robotY, imaginaryX - robotX));
 
         turretAngle = goalAngle - robotH + 180;
-
-        if(automodeRed) turretAngle += 90;
-        if(automodeBlue) turretAngle -= 90;
 
         if (turretAngle > 180) turretAngle = turretAngle - 360;
         if (turretAngle < -180) turretAngle = turretAngle + 360;
@@ -116,10 +110,6 @@ public class Outtake{
     public void endTransfer() {
         transferMode = false;
     }
-    public void initautoRed(){
-        automodeRed = true;
-    }
-    public void initautoBlue(){ automodeBlue = true;}
     public void setShooterSpeed(double x){
         shooterSpeed = x;
     }
