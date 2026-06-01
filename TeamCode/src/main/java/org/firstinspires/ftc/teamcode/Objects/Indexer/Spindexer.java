@@ -22,8 +22,9 @@ public class Spindexer {
     private DcMotor encoder;
     private AnalogInput position;
     private ElapsedTime timer = new ElapsedTime();
-//CU /BATTERY    private static double kp = -0.00247, kd = -0.0003, ks = -0.12;
-    private static double kp = -0.00017, kd = -0.0000128, ks = -0.0152, addp = -0.00021, addd = -0.0000188, adds = 0;
+    private static double kp1 = -0.00017, kd1 = -0.0000128, ks1 = -0.0152;
+    private static double addp = -0.00017, addd = -0.0000138, adds = -0.01;
+    private double kp , kd, ks;
     public static double CasianSafe = 200;
     private double error, currentSpeed, power;
     private double currentPosition, lastPosition;
@@ -33,7 +34,7 @@ public class Spindexer {
     private double targetPosition = 0;
     private double transferSpeed = -14;
     private double batterySpin;
-    public static double POS_INTAKE = 0, POS_CHAMBERFRONT = -1350, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
+    public static double POS_INTAKE = 0, POS_CHAMBERFRONT = -1300, POS_CHAMBERRIGHT = 20, POS_CHAMBERLEFT = -10;
     public boolean UseKs, FirstFrame, shooting = false, freeSpin, resetBaterry = true;
     public enum StateSpindexer{
         CHAMBERFRONT,
@@ -87,9 +88,9 @@ public class Spindexer {
                     targetPosition = POS_INTAKE;
                     shooting = false;
                     resetBaterry = false;
-                    kp = -0.00021;
-                    ks = -0.011;
-                    kd = -0.000012;
+                    kp = kp1;
+                    ks = ks1;
+                    kd = kd1;
 
                     break;
                 case CHAMBERFRONT:

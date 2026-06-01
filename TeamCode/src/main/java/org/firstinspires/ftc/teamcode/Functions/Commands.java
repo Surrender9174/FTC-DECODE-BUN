@@ -81,6 +81,6 @@ public class Commands {
 
         turret.update();
         detection.update();
-        transfer.update();
+        //transfer.update();
     }
 }

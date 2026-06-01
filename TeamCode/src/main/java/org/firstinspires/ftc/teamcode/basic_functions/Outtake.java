@@ -102,7 +102,7 @@ public class Outtake{
         return 0.00000000198847 * Math.pow(x, 4) - 0.00000230068 * Math.pow(x, 3)  + 0.00095348 * Math.pow(x, 2) - 0.163724 * x + 9.97497;
     }
     private double getTime(double x) {
-        return 0.95;
+        return 0.9;
     }
     public void initiateTransfer() {
         transferMode = true;

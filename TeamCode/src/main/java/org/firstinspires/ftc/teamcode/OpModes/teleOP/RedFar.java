@@ -32,6 +32,9 @@ import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ServoIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
@@ -54,8 +57,27 @@ public class RedFar extends OpMode {
     public ServoIntake servoIntake;
     public Spindexer spindexer;
     public Trapa trapa;
+    public Shoot shooter;
+    public Camera camera;
+    public Turret turret;
     private int step;
     public boolean time1 = true, ok = false;
+
+    public enum Stari{
+
+        PRELOAD,
+        HUMAN,
+        SPIKE3,
+        CICLE1,
+        CICLE2,
+        CICLE3,
+        LEAVE;
+    }
+    public enum StepsIntake{
+        MOVEINTAKE,
+        MOVESHOOT;
+    }
+
 
     public ElapsedTime timer = new ElapsedTime();
     public ElapsedTime timer2 = new ElapsedTime();
@@ -66,29 +88,23 @@ public class RedFar extends OpMode {
     public Pose robotpose = new Pose();
     public Pose startPose = new Pose(0, 0, Math.toRadians(90));
     //public Pose pivot = new Pose( -10, 8, 90);
-    public Pose scorePose = new Pose(40, 1, Math.toRadians(0));
-    //public Pose pivotScorePose = new Pose(3, 20, Math.toRadians(90));
+    public Pose humanPose = new Pose(42, 5, Math.toRadians(90));
+    public Pose humanPose2 = new Pose(38, 4, Math.toRadians(90));
+    public Pose humanPose3 = new Pose(42, 0, Math.toRadians(90));
+    public Pose spike3Pose = new Pose(42, 30, Math.toRadians(90));
+    public Pose spike3Pivot1 = new Pose(0, 20, Math.toRadians(90));
+    public Pose startPoseAfterspike = new Pose(5, 0, Math.toRadians(90));
+    //public Pose spike3Pivot2 = new Pose(45, 0, Math.toRadians(90));
+    public Pose leavePose = new Pose(20, 20, Math.toRadians(90));
 
-    public Pose spike2 = new Pose(-30, 39.3, Math.toRadians(90));
-    public Pose backtoshootspike2 = new Pose(-9, 0, Math.toRadians(90));
-
-    public Pose pivots2 = new Pose(-25, 18, Math.toRadians(90));
-    public Pose pivots3 = new Pose(-10, 30, Math.toRadians(90));
-    public Pose leave1 = new Pose(-30, 0, Math.toRadians(90));
-
-    //public Pose spike2 = new Pose(-85, 45, 90);
-    //public Pose spike2control = new Pose(7, 80,90);
-    //public Pose pivot = new Pose(0, 10, 90);
-    //public Pose scorePose = new Pose(23, 8, 31);
-
-    public Path leaving;
-    public Path scorePath;
+    public PathChain humanPathChain;
+    public Path humanPath1, humanPath2, humanPath3;
     public Path backtoshoot;
-    public Path intakespike2;
+    public Path spike3Path;
     public Path backtoshoot2;
-    public Path backtointake;
-    public Path backtoshoot3;
     public Path leave;
+
+    public Stari state;
 
     @Override
     public void init() {
@@ -105,8 +121,11 @@ public class RedFar extends OpMode {
         commands = new Commands();
         commands.init(objects, robot);
 
-        transfer = objects.transfer;
+        //transfer = objects.transfer;
+        camera = objects.camera;
+        shooter = objects.shoot;
         trapa = objects.trapa;
+        turret = objects.turret;
         activeIntake = objects.activeIntake;
         spindexer = objects.spindexer;
         servoIntake = objects.servoIntake;
@@ -122,7 +141,7 @@ public class RedFar extends OpMode {
         follower.setHeading(Math.toRadians(90));
 
         //  objects.turret.setTargetPosition(90);// -110, 330;
-        goalX = -324.5; goalY = 146;
+        goalX = -305.5; goalY = 125;
         time1 = true;
         //objects.turret.setTargetPosition(-90);
 
@@ -131,74 +150,247 @@ public class RedFar extends OpMode {
     }
 
     public void buildPath() {
+        humanPath1 = new Path(new BezierLine(startPose, humanPose));
+        humanPath2 = new Path(new BezierLine(humanPose, humanPose2));
+        humanPath3 = new Path(new BezierLine(humanPose2, humanPose3));
+        backtoshoot = new Path(new BezierLine(humanPose, startPose));
+        spike3Path = new Path(new BezierCurve(startPose, spike3Pivot1, spike3Pose));
+        backtoshoot2 = new Path(new BezierLine(spike3Pose, startPoseAfterspike));
+        leave = new Path(new BezierLine(startPoseAfterspike, leavePose));
 
-        scorePath = new Path(new BezierLine(startPose, scorePose));
-        backtoshoot = new Path(new BezierLine(scorePose, startPose));
-        intakespike2 = new Path(new BezierCurve(startPose, pivots2, spike2));
-        backtoshoot2 = new Path(new BezierCurve(spike2, pivots3, backtoshootspike2));
-        backtointake = new Path(new BezierLine(backtoshootspike2, scorePose));
-        backtoshoot3 = new Path(new BezierLine(scorePose, backtoshootspike2));
-        leave = new Path(new BezierLine(backtoshootspike2, leave1));
-
-        leaving = new Path(new BezierLine(startPose, leave1));
-
-        scorePath.setConstantHeadingInterpolation(Math.toRadians(0));
+        humanPath1.setConstantHeadingInterpolation(Math.toRadians(0));
+        humanPath2.setConstantHeadingInterpolation(Math.toRadians(0));
+        humanPath3.setConstantHeadingInterpolation(Math.toRadians(0));
         backtoshoot.setConstantHeadingInterpolation(Math.toRadians(0));
-        intakespike2.setTangentHeadingInterpolation();
-        backtoshoot2.setTangentHeadingInterpolation();
-        backtoshoot2.reverseHeadingInterpolation();
-        backtointake.setConstantHeadingInterpolation(Math.toRadians(0));
-        backtoshoot3.setConstantHeadingInterpolation(Math.toRadians(0));
+        spike3Path.setTangentHeadingInterpolation();
+        backtoshoot2.setConstantHeadingInterpolation(0);
         leave.setConstantHeadingInterpolation(Math.toRadians(0));
+
+        humanPathChain = new PathChain(humanPath1, humanPath2, humanPath3);
+
         step = 0;
     }
     @Override
     public void start() {
-        detection.setGoalOffsets(-15, 20);
+        //detection.setGoalOffsets(-15, 20);
+        time1 = true;
         timer.reset();
         timer2.reset();
         totaltime.reset();
     }
     @Override
     public void loop() {
-        //if (totaltime.seconds() < 29) {
-            update();
-
-            follower.update();
-            telemetry.addData("Pos", follower.getPose());
-            telemetry.addData("TrapaState", trapa.getState());
-            telemetry.addData("GoalX", goalX);
-            telemetry.addData("GoalY", goalY);
-            telemetry.addData("STATE", step);
-            telemetry.addData("UnghiTurreta", objects.turret.getTurretAngle());
-            telemetry.addData("X Y Z", follower.getPose());
-
-            transfer.update();
-            intake.update();
-            objects.update2();
-            commands.update();
-            robot.update();
-        //} else {
-        //    objects.camera.resetDetection();
-        //    objects.turret.setTargetPosition(0);
-        //}
-
-        //detection.update();
+        update();
+        UpdateObject();
     }
+
+
     public void update() {
-        robotpose = follower.getPose();
-        telemetry.addData("XAUTO", robotpose.getX());
-        telemetry.addData("YAUTO", robotpose.getY());
-        telemetry.addData("HAUTO", robotpose.getHeading());
-        switch (step){
-            case 0:
-                if(objects.shoot.getSpeedDifference() > 20) break;
-                transfer.setState(Transfer.StateTransfer.INIT);
-                step = 1;
+        switch (state){
+            case PRELOAD:
+                Shoot();
+                state = Stari.HUMAN;
                 break;
-            case 1:
+            case HUMAN:
+                MoveChain(humanPathChain);
+                BackToShoot(backtoshoot);
+                if(!follower.isBusy()){
+                    Shoot();
+                }
+                state = Stari.SPIKE3;
+                break;
+            case SPIKE3:
+                MovePath(spike3Path);
+                BackToShoot(backtoshoot2);
+                if(!follower.isBusy()){
+                    Shoot();
+                }
+                state = Stari.CICLE1;
+                break;
+            case CICLE1:
+                MoveChain(humanPathChain);
+                BackToShoot(backtoshoot);
+                if(!follower.isBusy()){
+                    Shoot();
+                }
+                state = Stari.CICLE2;
+                break;
+            case CICLE2:
+                MoveChain(humanPathChain);
+                BackToShoot(backtoshoot);
+                if(!follower.isBusy()){
+                    Shoot();
+                }
+                state = Stari.CICLE3;
+                break;
+            case CICLE3:
+                MoveChain(humanPathChain);
+                BackToShoot(backtoshoot);
+                if(!follower.isBusy()){
+                    Shoot();
+                }
+                state = Stari.LEAVE;
+                break;
+            case LEAVE:
+                MovePath(leave);
+                camera.resetDetection();
+                turret.setTargetPosition(0);
                 break;
         }
 
+        /*switch (step){
+            case -1:
+                break;
+            case 0:
+                //if(Math.abs(objects.shoot.getSpeedDifference()) > 20) break;
+                Shoot();
+                break;
+            case 1:
+                intake.setState(Intake.StateIntake.INTAKE);
+                if(timer.seconds() > 0.3){
+                    follower.followPath(humanPathChain);
+                    timer.reset();
+                    step = 2;
+                }
+
+                break;
+            case 2:
+                if(!follower.isBusy()){
+                    if(timer.seconds() > 0.4){
+                        intake.setState(Intake.StateIntake.INIT);
+                        time1 = true;
+                        step = 3;
+                    }
+                    else if(timer.seconds() > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
+                }
+                else{
+                    timer.reset();
+                }
+                break;
+            case 3:
+                follower.followPath(backtoshoot);
+                timer.reset();
+                step = 4;
+                break;
+            case 4:
+                Shoot();
+                break;
+            case 5:
+                intake.setState(Intake.StateIntake.INTAKE);
+                follower.followPath(spike3Path);
+                timer.reset();
+                step = 6;
+                break;
+            case 6:
+                if(!follower.isBusy()){
+                    if(timer.seconds() > 0.4){
+                        intake.setState(Intake.StateIntake.INIT);
+                        time1 = true;
+                        step = 7;
+                    }
+                    else if(timer.seconds() > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
+                }
+                else{
+                    timer.reset();
+                }
+            case 7:
+                follower.followPath(backtoshoot);
+                timer.reset();
+                step = 8;
+                break;
+            case 8:
+
+                break;
+            case 9:
+                intake.setState(Intake.StateIntake.INTAKE);
+                if(timer.seconds() > 0.3){
+                    follower.followPath(humanPathChain);
+                    timer.reset();
+                    step = 10;
+                }
+            case 10:
+                if(!follower.isBusy()){
+                    if(timer.seconds() > 0.4){
+                        intake.setState(Intake.StateIntake.INIT);
+                        time1 = true;
+                        step = 11;
+                    }
+                    else if(timer.seconds() > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
+                }
+                else{
+                    timer.reset();
+                }
+                break;
+            case 11:
+                follower.followPath(backtoshoot2);
+                timer.reset();
+                step = 12;
+            case 12:
+                if(!follower.isBusy()){
+                    if(time1 && Math.abs(shooter.getSpeedDifference()) <= 20 && timer.seconds() > 0.3){
+                        transfer.setState(Transfer.StateTransfer.INIT);
+                        time1 = false;
+                    }
+                    if(transfer.getState() == Transfer.StateTransfer.FINISH) {
+                        timer.reset();
+                        step = -1;
+                    }
+                }
+                else{
+                    timer.reset();
+                }
+                break;
+        }
+        */
+
+    }
+    public void MovePath(Path path){
+        intake.setState(Intake.StateIntake.INTAKE);
+        if(timer.seconds() > 0.3){
+            follower.followPath(path);
+            timer.reset();
+        }
+    }
+    public void MoveChain(PathChain pathChain){
+        intake.setState(Intake.StateIntake.INTAKE);
+        if(timer.seconds() > 0.3){
+            follower.followPath(pathChain);
+            timer.reset();
+        }
+    }
+
+    public void BackToShoot(Path path){
+        if(timer.seconds() > 0.4){
+            intake.setState(Intake.StateIntake.INIT);
+            time1 = true;
+            follower.followPath(backtoshoot);
+            timer.reset();
+        }
+        else if(timer.seconds() > 0.1)
+            intake.setState(Intake.StateIntake.OUTTAKE);
+    }
+
+    public void Shoot(){
+       if(time1 && Math.abs(shooter.getSpeedDifference()) <= 20 && timer.seconds() > 0.3){
+            transfer.setState(Transfer.StateTransfer.INIT);
+            time1 = false;
+       }
+       if(transfer.getState() == Transfer.StateTransfer.FINISH) {
+            timer.reset();
+       }
+    }
+    public void UpdateObject(){
+        follower.update();
+        shooter.update();
+        turret.update();
+        camera.update();
+        outtake.update();
+        transfer.update();
+        spindexer.update();
+        trapa.update();
+        servoIntake.update();
+        activeIntake.update();
+        intake.update();
+        robot.update();
     }
 }

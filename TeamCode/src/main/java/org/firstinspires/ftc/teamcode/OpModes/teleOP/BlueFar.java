@@ -32,6 +32,9 @@ import org.firstinspires.ftc.teamcode.Objects.Intake.ActiveIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.ServoIntake;
 import org.firstinspires.ftc.teamcode.Objects.Intake.Trapa;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Camera;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Shoot;
+import org.firstinspires.ftc.teamcode.Objects.Shooter.Turret;
 import org.firstinspires.ftc.teamcode.basic_functions.Outtake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.robot.AllObjects;
@@ -54,43 +57,34 @@ public class BlueFar extends OpMode {
     public ServoIntake servoIntake;
     public Spindexer spindexer;
     public Trapa trapa;
+    public Shoot shooter;
+    public Camera camera;
+    public Turret turret;
+
     private int step;
-    public boolean time1 = true , ok = false;
+    public boolean time1 = true, ok = false;
 
     public ElapsedTime timer = new ElapsedTime();
     public ElapsedTime timer2 = new ElapsedTime();
     public ElapsedTime totaltime = new ElapsedTime();
 
-    public double add90x = - 3.47, add90y = -4;
+    public double add90x = -3.47, add90y = -4;
 
-    public Pose startPose = new Pose(0, 0 , Math.toRadians(90));
-    //public Pose pivot = new Pose( -10, 8, 90);
-    public Pose scorePose = new Pose(0,  30, Math.toRadians(90));
-    //public Pose pivotScorePose = new Pose(3, 20, Math.toRadians(90));
-
-    public Pose spike2 = new Pose(30, 48, Math.toRadians(90));
-    public Pose backtoshootspike2 = new Pose(9, 0, Math.toRadians(90));
-
-    public Pose pivots2 = new Pose(25, 18, Math.toRadians(90));
-    public Pose pivots3 = new Pose(10, 30, Math.toRadians(90));
-    public Pose leave1 = new Pose(10, 30, Math.toRadians(90));
-
-    //public Pose spike2 = new Pose(-85, 45, 90);
-    //public Pose spike2control = new Pose(7, 80,90);
-    //public Pose pivot = new Pose(0, 10, 90);
-    //public Pose scorePose = new Pose(23, 8, 31);
-
-
-    public Path scorePath;
+    public Pose startPose = new Pose(0, 0, Math.toRadians(90));
+    //ublic Pose startHumanPose = new Pose(40, -10, Math.toRadians(90));
+    public Pose startHumanPose1 = new Pose(45.5, -2, Math.toRadians(90));
+    public Pose HumanPose1 = new Pose(37, 0, Math.toRadians(90));
+    public Pose shoot1 = new Pose(0, 5, Math.toRadians(90));
+    public Pose spike3 = new Pose(10, 10, Math.toRadians(90));
+    public Pose pivot1 = new Pose(20, 10, Math.toRadians(90));
+    public Path StartHumanPose;
+    public Path StartHumanPose1;
+    public Path HumanPose;
     public Path backtoshoot;
-    public Path intakespike2;
-    public Path backtoshoot2;
-    public Path backtointake;
-    public Path backtoshoot3;
-    public Path leave;
+    public Path Spike3;
 
     @Override
-    public void init(){
+    public void init() {
         alliance = 1;
         StaticVariables.init(hardwareMap, telemetry, gamepad1, gamepad2);
 
@@ -104,13 +98,13 @@ public class BlueFar extends OpMode {
         commands = new Commands();
         commands.init(objects, robot);
 
-        transfer = objects.transfer;
+        camera = objects.camera;
+        shooter = objects.shoot;
         trapa = objects.trapa;
+        turret = objects.turret;
         activeIntake = objects.activeIntake;
         spindexer = objects.spindexer;
         servoIntake = objects.servoIntake;
-
-
 
         intake = new Intake(activeIntake, trapa, spindexer, servoIntake);
         detection = new Detection(objects);
@@ -119,71 +113,138 @@ public class BlueFar extends OpMode {
 
         follower = createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+        follower.setHeading(Math.toRadians(90));
 
-        //objects.turret.setTargetPosition(90);// -110, 330;
-        robotH += 90;
+        //objects.turret.setTargetPosition(110);
+        goalX = 310;
+        goalY = 120;
         time1 = true;
-
+        servoIntake.setState(ServoIntake.StariServoIntake.INTAKE);
 
         buildPath();
     }
-    public void buildPath(){
-        scorePath = new Path(new BezierLine(startPose, scorePose));
-        backtoshoot = new Path(new BezierLine(scorePose, startPose));
-        intakespike2 = new Path(new BezierCurve(startPose, pivots2, spike2));
-        backtoshoot2 = new Path(new BezierCurve(spike2, pivots3, backtoshootspike2));
-        backtointake = new Path(new BezierLine(backtoshootspike2, scorePose));
-        backtoshoot3 = new Path(new BezierLine(scorePose, backtoshootspike2));
-        leave = new Path(new BezierLine(backtoshootspike2, scorePose));
 
-        scorePath.setConstantHeadingInterpolation(Math.toRadians(0));
-        backtoshoot.setConstantHeadingInterpolation(Math.toRadians(0));
-        intakespike2.setTangentHeadingInterpolation();
-        backtoshoot2.setTangentHeadingInterpolation();
-        backtoshoot2.reverseHeadingInterpolation();
-        backtointake.setConstantHeadingInterpolation(Math.toRadians(90));
-        backtoshoot3.setConstantHeadingInterpolation(Math.toRadians(90));
-        leave.setConstantHeadingInterpolation(Math.toRadians(90));
-        step = 1;
+    public void buildPath() {
+        StartHumanPose = new Path(new BezierLine(startPose, startHumanPose1));
+        StartHumanPose1 = new Path(new BezierLine(startHumanPose1, startPose));
+        backtoshoot = new Path(new BezierLine(startHumanPose1, shoot1));
+        Spike3 = new Path(new BezierCurve(shoot1, pivot1, spike3));
+
+        StartHumanPose.setConstantHeadingInterpolation(Math.toRadians(0));
+        StartHumanPose1.setConstantHeadingInterpolation(Math.toRadians(0));
+        backtoshoot.setConstantHeadingInterpolation(90);
+        Spike3.setTangentHeadingInterpolation();
+        step = 0;
     }
 
-    public void start(){
-        detection.setGoalOffsets(-25,20);
+    public void start() {
+        time1 = true;
         timer.reset();
         timer2.reset();
         totaltime.reset();
     }
 
-    public void loop(){
-        if(totaltime.seconds() < 29){
-            update();
+    public void loop() {
+        update();
+        follower.update();
 
-            follower.update();
-            telemetry.addData("Pos", follower.getPose());
-            telemetry.addData("TrapaState", trapa.getState());
-            telemetry.addData("GoalX", goalX);
-            telemetry.addData("GoalY", goalY);
-            telemetry.addData("STATE", step);
-            telemetry.addData("UnghiTurreta", objects.turret.getTurretAngle());
-            telemetry.addData("X Y Z", follower.getPose());
+        shooter.update();
+        turret.update();
+        camera.update();
 
-            transfer.update();
-            intake.update();
-            objects.update2();
-            commands.update();
-            robot.update();
-        }
-        else{
-            objects.camera.resetDetection();
-            objects.turret.setTargetPosition(0);
-        }
+        outtake.update();
 
-        //detection.update();
+        transfer.update();
+
+        spindexer.update();
+        trapa.update();
+        servoIntake.update();
+        activeIntake.update();
+
+        intake.update();
+
+        commands.update();
+        robot.update();
     }
 
-    public void update(){
-        switch (step){
+    public void update() {
+        switch (step) {
+            case -1:
+                if (timer.seconds() > 29)
+                    step = 0;
+                break;
             case 0:
+                if (time1 && Math.abs(shooter.getSpeedDifference()) <= 20) {
+                    transfer.setState(Transfer.StateTransfer.INIT);
+                    time1 = false;
+                }
+                if (transfer.getState() == Transfer.StateTransfer.FINISH) {
+                    spindexer.setState(Spindexer.StateSpindexer.INTAKE);
+                    timer.reset();
+                    step = 1;
+                }
+                break;
+            case 1:
+                intake.setState(Intake.StateIntake.INTAKE);
+                if (timer.seconds() > 0.3) {
+                    follower.followPath(StartHumanPose);
+                    timer.reset();
+                    step = 2;
+                }
+                break;
+            case 2:
+                if(!follower.isBusy()) {
+                    if (timer.seconds() > 0.8) {
+                        intake.setState(Intake.StateIntake.OUTTAKE);
+                        if (timer.seconds() > 1.0) {
+                            timer.reset();
+                            intake.setState(Intake.StateIntake.INIT);
+                            follower.followPath(StartHumanPose1);
+                        }
+                    }
+                    break;
+                }
+        }
+    }
+}
+            /*case 2:
+                follower.followPath(StartHumanPose1);
+                step = 3;
+                timer.reset();
+                break;
+            case 3:
+                if(timer.seconds() > 10){
+                    follower.followPath(backtoshoot);
+                    time1 = true;
+                    timer.reset();
+                    step = 4;
+                }
+                break;
+            case 4:
+                if(!follower.isBusy()){
+                    if (time1 && Math.abs(shooter.getSpeedDifference()) <= 20)
+                    {
+                        transfer.setState(Transfer.StateTransfer.INIT);
+                        time1 = false;
+                    }
+                    if (transfer.getState() == Transfer.StateTransfer.FINISH)
+                    {
+                        spindexer.setState(Spindexer.StateSpindexer.INTAKE);
+                        timer.reset();
+                        step = 5;
+                    }
+                }
+                break;
+            case 5:
+                intake.setState(Intake.StateIntake.INTAKE);
+                if(timer.seconds() > 0.3){
+                    //follower.followPath();
+                }
+                break;
+        }
+    }
+}
+            /*case 0:
                 if(time1 &&  timer.seconds() > 2){
                     transfer.setState(Transfer.StateTransfer.INIT);
                     time1 = false;
@@ -408,6 +469,5 @@ public class BlueFar extends OpMode {
                     }
                 }
                 break;
-        }*/
-    }
-}
+        }
+    }*/

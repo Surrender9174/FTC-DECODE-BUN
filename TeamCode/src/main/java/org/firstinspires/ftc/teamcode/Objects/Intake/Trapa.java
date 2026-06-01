@@ -38,6 +38,8 @@ public class Trapa {
             }
         }
 
+        telemetry.addData("ServoTrapaPos", servoTrapa.getPosition());
+
         laststate = state;
     }
 

@@ -64,19 +64,4 @@ public class AllObjects {
         outtake.update();
         camera.update();
     }
-
-    public void update2(){
-        activeIntake.update();
-        servoIntake.update();
-
-        trapa.update();
-        spindexer.update();
-
-        turret.update();
-        shoot.update();
-        //intake.update();
-        //transfer.update();
-        camera.update();
-        outtake.update();
-    }
 }
