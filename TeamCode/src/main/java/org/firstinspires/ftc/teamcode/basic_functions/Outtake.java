@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.PanelTelemetr
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalX;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.goalY;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotHeadingVelocity;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotVelocity;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotVelocityAngle;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
@@ -39,6 +40,7 @@ public class Outtake{
     private double goalAngle, goalDistance, GoalAngle;
 
     private double imaginaryX, imaginaryY, imaginaryDistance;
+    private static double K = 0.01;
 
     private boolean transferMode = false;
     private ElapsedTime timer = new ElapsedTime();
@@ -78,7 +80,10 @@ public class Outtake{
             if (transferMode) shooter.setTargetSpeed(getShooterSpeed(goalDistance) + shooterSpeed);
             else shooter.setTargetSpeed(1400);
 
-            hood.setPosition(getAngle(goalDistance) - KangleAdjustment * shooter.getSpeedDifference());
+            if(shooter.getSpeedDifference() > 20){
+                hood.setPosition(getAngle(goalDistance) - KangleAdjustment * shooter.getSpeedDifference());
+            }
+            else hood.setPosition(getAngle(goalDistance));
             //shooter.setTargetSpeed(shooterSpeed);
             //hood.setPosition(anglePosition - KangleAdjustment * shooter.getSpeedDifference());
         }

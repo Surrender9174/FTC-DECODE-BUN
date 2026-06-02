@@ -153,7 +153,7 @@ public class RedFar extends OpMode {
         humanPath1 = new Path(new BezierLine(startPose, humanPose));
         humanPath2 = new Path(new BezierLine(humanPose, humanPose2));
         humanPath3 = new Path(new BezierLine(humanPose2, humanPose3));
-        backtoshoot = new Path(new BezierLine(humanPose, startPose));
+        backtoshoot = new Path(new BezierLine(humanPose3, startPose));
         spike3Path = new Path(new BezierCurve(startPose, spike3Pivot1, spike3Pose));
         backtoshoot2 = new Path(new BezierLine(spike3Pose, startPoseAfterspike));
         leave = new Path(new BezierLine(startPoseAfterspike, leavePose));
@@ -181,15 +181,38 @@ public class RedFar extends OpMode {
     @Override
     public void loop() {
         update();
-        UpdateObject();
+
+        telemetry.addData("Step", step);
+
+        follower.update();
+
+
+
+        shooter.update();
+        turret.update();
+        camera.update();
+
+        outtake.update();
+
+        transfer.update();
+
+        spindexer.update();
+        trapa.update();
+        servoIntake.update();
+        activeIntake.update();
+
+        intake.update();
+
+        robot.update();
     }
 
 
     public void update() {
-        switch (state){
+        /*switch (state){
             case PRELOAD:
-                Shoot();
-                state = Stari.HUMAN;
+                if(Shoot() == 1){
+                    state = Stari.HUMAN;
+                }
                 break;
             case HUMAN:
                 MoveChain(humanPathChain);
@@ -238,12 +261,19 @@ public class RedFar extends OpMode {
                 break;
         }
 
-        /*switch (step){
+        */
+        switch (step){
             case -1:
                 break;
             case 0:
-                //if(Math.abs(objects.shoot.getSpeedDifference()) > 20) break;
-                Shoot();
+                if(time1 && Math.abs(shooter.getSpeedDifference()) <= 20){
+                    transfer.setState(Transfer.StateTransfer.INIT);
+                    time1 = false;
+                }
+                if(transfer.getState() == Transfer.StateTransfer.FINISH) {
+                    timer.reset();
+                    step = 1;
+                }
                 break;
             case 1:
                 intake.setState(Intake.StateIntake.INTAKE);
@@ -261,7 +291,8 @@ public class RedFar extends OpMode {
                         time1 = true;
                         step = 3;
                     }
-                    else if(timer.seconds() > 0.1) intake.setState(Intake.StateIntake.OUTTAKE);
+                    else if(timer.seconds() > 0.1)
+                        intake.setState(Intake.StateIntake.OUTTAKE);
                 }
                 else{
                     timer.reset();
@@ -273,13 +304,27 @@ public class RedFar extends OpMode {
                 step = 4;
                 break;
             case 4:
-                Shoot();
+                if(!follower.isBusy()){
+                    if(time1 && Math.abs(shooter.getSpeedDifference()) <= 20 && timer.seconds() > 0.3){
+                        transfer.setState(Transfer.StateTransfer.INIT);
+                        time1 = false;
+                    }
+                    if(transfer.getState() == Transfer.StateTransfer.FINISH) {
+                        timer.reset();
+                        step = 5;
+                    }
+                }
+                else{
+                    timer.reset();
+                }
                 break;
             case 5:
                 intake.setState(Intake.StateIntake.INTAKE);
-                follower.followPath(spike3Path);
-                timer.reset();
-                step = 6;
+                if(timer.seconds() > 0.3) {
+                    follower.followPath(spike3Path);
+                    timer.reset();
+                    step = 6;
+                }
                 break;
             case 6:
                 if(!follower.isBusy()){
@@ -293,13 +338,26 @@ public class RedFar extends OpMode {
                 else{
                     timer.reset();
                 }
+                break;
             case 7:
-                follower.followPath(backtoshoot);
+                follower.followPath(backtoshoot2);
                 timer.reset();
                 step = 8;
                 break;
             case 8:
-
+                if(!follower.isBusy()){
+                    if(time1 && Math.abs(shooter.getSpeedDifference()) <= 20 && timer.seconds() > 0.3){
+                        transfer.setState(Transfer.StateTransfer.INIT);
+                        time1 = false;
+                    }
+                    if(transfer.getState() == Transfer.StateTransfer.FINISH) {
+                        timer.reset();
+                        step = 9;
+                    }
+                }
+                else{
+                    timer.reset();
+                }
                 break;
             case 9:
                 intake.setState(Intake.StateIntake.INTAKE);
@@ -333,15 +391,20 @@ public class RedFar extends OpMode {
                     }
                     if(transfer.getState() == Transfer.StateTransfer.FINISH) {
                         timer.reset();
-                        step = -1;
+                        step = 13;
                     }
                 }
                 else{
                     timer.reset();
                 }
                 break;
+            case 13:
+                follower.followPath(leave);
+                camera.resetDetection();
+                turret.setTargetPosition(0);
+                step = -1;
+                break;
         }
-        */
 
     }
     public void MovePath(Path path){
@@ -376,21 +439,8 @@ public class RedFar extends OpMode {
             time1 = false;
        }
        if(transfer.getState() == Transfer.StateTransfer.FINISH) {
+            time1 = true;
             timer.reset();
        }
-    }
-    public void UpdateObject(){
-        follower.update();
-        shooter.update();
-        turret.update();
-        camera.update();
-        outtake.update();
-        transfer.update();
-        spindexer.update();
-        trapa.update();
-        servoIntake.update();
-        activeIntake.update();
-        intake.update();
-        robot.update();
     }
 }

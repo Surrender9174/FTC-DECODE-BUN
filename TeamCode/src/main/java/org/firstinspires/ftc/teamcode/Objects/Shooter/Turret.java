@@ -4,6 +4,7 @@ import static com.pedropathing.math.MathFunctions.clamp;
 
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.battery;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.lastgamepad;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotHeadingVelocity;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -18,6 +19,8 @@ import org.firstinspires.ftc.teamcode.robot.RobotHardware;
 public class Turret {
     private DcMotorEx motor;
     private ElapsedTime timer = new ElapsedTime();
+
+    private static double KTurret = 0.016;
     public static double kp = 0.0342, kd = 0.00285, ki = 0, ks = 1.369;
 
     public ElapsedTime stabletimer = new ElapsedTime();
@@ -68,12 +71,14 @@ public class Turret {
 
         error = targetPosition - currentPosition;
 
-        power = kp * error + (-currentSpeed) * kd;
+        power = kp * error + (-currentSpeed) * kd - robotHeadingVelocity * KTurret;
 
         if(Math.abs(error) >= 4) useKs = true;
         if(Math.abs(error) <= 2) useKs = false;
 
         if(useKs) power = power + Math.signum(error) * ks;
+
+
 
         power = clamp(power/battery, -1, 1);
         motor.setPower(power);

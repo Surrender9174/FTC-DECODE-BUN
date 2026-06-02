@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.gamepad2;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.lastgamepad;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.lastgamepad2;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotH;
+import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotHeadingVelocity;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotVelocity;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotVelocityAngle;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotX;
@@ -163,6 +164,7 @@ public class RobotHardware {
 
         robotVelocity = Math.sqrt(Math.pow(robotX - lastRobotX, 2) + Math.pow(robotY - lastRobotY, 2)) / speedTimer.seconds();
         robotVelocityAngle = Math.atan2(robotY - lastRobotY, robotX - lastRobotX);
+        robotHeadingVelocity = (robotH - lastRobotH) / speedTimer.seconds();
 
         speedTimer.reset();
 
