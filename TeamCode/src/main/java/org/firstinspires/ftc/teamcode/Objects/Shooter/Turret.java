@@ -20,7 +20,8 @@ public class Turret {
     private DcMotorEx motor;
     private ElapsedTime timer = new ElapsedTime();
 
-    private static double KTurret = 0.016;
+    //private static double KTurret = 0.016;
+    private static double KTurret = 0;
     public static double kp = 0.0342, kd = 0.00285, ki = 0, ks = 1.369;
 
     public ElapsedTime stabletimer = new ElapsedTime();
