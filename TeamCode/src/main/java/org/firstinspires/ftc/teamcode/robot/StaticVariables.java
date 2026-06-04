@@ -12,7 +12,8 @@ public abstract class StaticVariables {
     public static HardwareMap hardwareMap;
     public static Telemetry telemetry;
     public static Gamepad gamepad, lastgamepad = new Gamepad(), gamepad2, lastgamepad2 = new Gamepad();
-    public static double robotX, robotY, robotH;
+    public static double robotX, robotY;
+    public static double robotH;
 
     public static double battery;
 

@@ -38,7 +38,7 @@ public class RedTeleOP extends OpMode {
         commands.init(objects, robot);
 
         //commands.detection.setCoeffs(5, 15);
-        commands.detection.setGoalOffsets(addX, addY);
+        //commands.detection.setGoalOffsets(addX, addY);
     }
     @Override
     public void loop() {

@@ -7,6 +7,8 @@ import static org.firstinspires.ftc.teamcode.robot.StaticVariables.lastgamepad;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.robotHeadingVelocity;
 import static org.firstinspires.ftc.teamcode.robot.StaticVariables.telemetry;
 
+import android.print.PrintAttributes;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -21,16 +23,16 @@ public class Turret {
     private ElapsedTime timer = new ElapsedTime();
 
     //private static double KTurret = 0.016;
-    private static double KTurret = 0;
-    public static double kp = 0.0342, kd = 0.00285, ki = 0, ks = 1.369;
+    private static double KTurret = 0.02;
+    public static double kp = 0.29, kd = 0.034, ki = 0, ks = 2.5   ;
 
     public ElapsedTime stabletimer = new ElapsedTime();
 
     private boolean usePIDF = true, useKs;
 
-    private double K = 4.166666666667;
+    private double K = 1.144444445;
 
-    private double currentPosition, lastPosition, error;
+    private double currentPosition, lastPosition, error, lastcurrentPosition;
     private double currentSpeed;
     private double power;
     private double targetPosition = 0;
@@ -82,7 +84,11 @@ public class Turret {
 
 
         power = clamp(power/battery, -1, 1);
+
+        //if(currentPosition+lastcurrentPosition > 2 && targetPosition != 0)
+
         motor.setPower(power);
+
 
         //motor.setPower(0);
 
@@ -90,9 +96,16 @@ public class Turret {
 
         lastPosition = currentPosition;
 
+        telemetry.addData("CurrentPosTurret", currentPosition);
+        telemetry.addData("TargetPosTurret", targetPosition);
+
         telemetry.addData("turretAngle", getTurretAngle());
         telemetry.addLine("");
         telemetry.addData("current pos", currentPosition);
+        telemetry.addData("TicksAndDeg", motor.getCurrentPosition());
+        telemetry.addLine("");
+        telemetry.addData("TurretPower", power);
+
 
     }
 

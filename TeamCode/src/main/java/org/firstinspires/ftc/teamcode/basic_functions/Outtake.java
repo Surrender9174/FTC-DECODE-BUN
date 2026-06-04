@@ -53,6 +53,7 @@ public class Outtake{
     }
 
     public void update() {
+        telemetry.addData("Unghi", turretAngle);
         if (goalX == 0 && goalY == 0)
             return;
 
@@ -60,8 +61,8 @@ public class Outtake{
         goalAngle = Math.toDegrees(Math.atan2(goalY - robotY, goalX - robotX));
 
         imaginaryDistance = robotVelocity * getTime(goalDistance);
-        imaginaryX = goalX + Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
-        imaginaryY = goalY + Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
+        imaginaryX = goalX - Math.cos(robotVelocityAngle + Math.PI) * imaginaryDistance;
+        imaginaryY = goalY - Math.sin(robotVelocityAngle + Math.PI) * imaginaryDistance;
 
        goalDistance = Math.sqrt(Math.pow(imaginaryX - robotX, 2) + Math.pow(imaginaryY - robotY, 2));
 
@@ -72,7 +73,7 @@ public class Outtake{
         if (turretAngle > 180) turretAngle = turretAngle - 360;
         if (turretAngle < -180) turretAngle = turretAngle + 360;
 
-       // turretAngle = clamp(turretAngle, -160, 160);
+       turretAngle = clamp(turretAngle, -170, 170);
 
         if (goalX != 0 && goalY != 0) {
             if (!camera.isTrackingMotif())

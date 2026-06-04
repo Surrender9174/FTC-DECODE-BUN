@@ -16,7 +16,7 @@ public class ServoIntake {
         OUTTAKE;
     }
 
-    public static double POS_INTAKE = 0.4, POS_OUTTAKE = 0.8;
+    public static double POS_INTAKE = 0.4, POS_OUTTAKE = 0.75;
 
     public StariServoIntake state, laststate;
 

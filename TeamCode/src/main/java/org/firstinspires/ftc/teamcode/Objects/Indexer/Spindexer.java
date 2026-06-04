@@ -28,7 +28,7 @@ public class Spindexer {
     public static double CasianSafe = 200;
     private double error, currentSpeed, power;
     private double currentPosition, lastPosition;
-    public static double initPosAnalog = 165;
+    public static double initPosAnalog = 145;
     private double initPosEncoder, offset;
     public static double K = 22.7555555555556;
     private double targetPosition = 0;
